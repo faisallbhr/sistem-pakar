@@ -42,13 +42,20 @@ class DatabaseSeeder extends Seeder
         $guruRole->givePermissionTo($guruPermission);
         $siswaRole->givePermissionTo($siswaPermission);
 
-        $user = User::create([
-            'name' => 'John Doe',
-            'email' => 'guru@mail.com',
+        $guru = User::create([
+            'name' => 'NOVIA ZAHRUL SHOFI',
+            'email' => 'noviaguru@gmail.com',
             'password' => bcrypt('password')
         ]);
 
-        $user->assignRole($guruRole);
+        $siswa = User::create([
+            'name' => 'Novia',
+            'email' => 'noviasiswa@gmail.com',
+            'password' => bcrypt('password')
+        ]);
+
+        $guru->assignRole($guruRole);
+        $siswa->assignRole($siswaRole);
 
         $gejala = new Gejala();
         $depresi = new Depresi();
