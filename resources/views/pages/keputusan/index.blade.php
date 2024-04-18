@@ -10,7 +10,7 @@
                 <div class="flex gap-2 items-center max-w-sm w-full">
                     <x-label for="keputusanSearch">Search: </x-label>
                     <x-input type="text" id="keputusanSearch" name="keputusanSearch"
-                        placeholder="Cari berdasarkan kode gejala/kode depresi..." />
+                        placeholder="Cari berdasarkan kode depresi..." />
                 </div>
             </div>
             <div id="keputusan-table" class="overflow-x-auto">

@@ -24,8 +24,7 @@ class KeputusanController extends Controller
     {
         $search = $request->input('search');
         $keputusans = \DB::table('keputusans')
-            ->where('kode_gejala', 'like', "%{$search}%")
-            ->orWhere('kode_depresi', 'like', "%{$search}%")
+            ->where('kode_depresi', 'like', "%{$search}%")
             ->orderBy('kode_gejala', 'asc')
             ->orderBy('kode_depresi', 'asc')
             ->paginate(10);

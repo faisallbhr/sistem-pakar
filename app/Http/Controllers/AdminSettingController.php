@@ -43,7 +43,7 @@ class AdminSettingController extends Controller
             'password' => bcrypt($request->password)
         ]);
 
-        $user->assignRole('admin');
+        $user->assignRole('guru');
 
         return redirect()->back()->with('success', 'Berhasil menambah admin!');
     }
