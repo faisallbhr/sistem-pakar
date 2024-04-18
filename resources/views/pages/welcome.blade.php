@@ -7,6 +7,8 @@
 
     <title>Depresi Check</title>
 
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,8 +48,10 @@
 
 <body class="antialiased font-inter bg-gradient-to-br from-blue-200 to-blue-400 text-slate-700">
     <div class="mx-auto max-w-7xl">
-        <header class="fixed flex justify-between w-full px-4 py-8 max-w-7xl">
-            <h1>logo</h1>
+        <header class="fixed flex justify-between items-center w-full p-4 max-w-7xl">
+            <div class="">
+                <img src="{{ asset('images/logo.png') }}" alt="" class="h-20">
+            </div>
             <nav>
                 @auth
                     <a href="{{ route('dashboard') }}"
