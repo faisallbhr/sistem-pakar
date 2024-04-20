@@ -83,57 +83,69 @@ class DiagnosaController extends Controller
     }
     public function store(Request $request)
     {
-        $filteredArray = $request->post('kondisi');
-        $kondisi = array_filter($filteredArray, function ($value) {
-            return $value !== null;
-        });
+        try {
+            \DB::beginTransaction();
+            $filteredArray = $request->post('kondisi');
+            $kondisi = array_filter($filteredArray, function ($value) {
+                return $value !== null;
+            });
 
-        $kodeGejala = [];
-        $bobotPilihan = [];
-        foreach ($kondisi as $key => $val) {
-            if ($val != "#") {
-                array_push($kodeGejala, $key);
-                array_push($bobotPilihan, array($key, $val));
-            }
-        }
-
-        $depresi = \DB::table('depresis')->get();
-        $cf = 0;
-
-        $arrGejala = [];
-        foreach ($depresi as $depressi) {
-            $cfArr = [
-                "cf" => [],
-                "kode_depresi" => []
-            ];
-
-            $ruleSetiapDepresi = \DB::table('keputusans')
-                ->whereIn('kode_gejala', $kodeGejala)
-                ->where('kode_depresi', $depressi->kode)
-                ->get();
-
-            if (count($ruleSetiapDepresi) > 0) {
-                foreach ($ruleSetiapDepresi as $ruleKey) {
-                    $cf = $ruleKey->mb - $ruleKey->md;
-                    array_push($cfArr["cf"], $cf);
-                    array_push($cfArr["kode_depresi"], $ruleKey->kode_depresi);
+            $kodeGejala = [];
+            $bobotPilihan = [];
+            foreach ($kondisi as $key => $val) {
+                if ($val != "#") {
+                    array_push($kodeGejala, $key);
+                    array_push($bobotPilihan, array($key, $val));
                 }
-
-                $res = $this->getGabunganCf($cfArr);
-                array_push($arrGejala, $res);
             }
+
+            $depresi = \DB::table('depresis')->get();
+            $cf = 0;
+
+            $arrGejala = [];
+            foreach ($depresi as $depressi) {
+                $cfArr = [
+                    "cf" => [],
+                    "kode_depresi" => []
+                ];
+
+                $ruleSetiapDepresi = \DB::table('keputusans')
+                    ->whereIn('kode_gejala', $kodeGejala)
+                    ->where('kode_depresi', $depressi->kode)
+                    ->get();
+
+                if (count($ruleSetiapDepresi) > 0) {
+                    foreach ($ruleSetiapDepresi as $ruleKey) {
+                        $cf = $ruleKey->mb - $ruleKey->md;
+                        array_push($cfArr["cf"], $cf);
+                        array_push($cfArr["kode_depresi"], $ruleKey->kode_depresi);
+                    }
+
+                    $res = $this->getGabunganCf($cfArr);
+                    array_push($arrGejala, $res);
+                }
+            }
+
+            if (!$bobotPilihan or !$arrGejala) {
+                \DB::rollBack();
+                return redirect()->back()->with('error', 'Harus menjawab paling tidak salah satu pertanyaan!');
+            }
+
+            $uuid = Str::uuid();
+            \DB::table('diagnosas')->insert([
+                'id' => $uuid,
+                'data' => json_encode($arrGejala),
+                'hasil' => json_encode($bobotPilihan),
+                'user_id' => \Auth::user()->id,
+                'created_at' => now()
+            ]);
+
+            \DB::commit();
+            return redirect()->route('diagnosa.result.user', ["diagnosaId" => $uuid]);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
-        $uuid = Str::uuid();
-        \DB::table('diagnosas')->insert([
-            'id' => $uuid,
-            'data' => json_encode($arrGejala),
-            'hasil' => json_encode($bobotPilihan),
-            'user_id' => \Auth::user()->id,
-            'created_at' => now()
-        ]);
-
-        return redirect()->route('diagnosa.result.user', ["diagnosaId" => $uuid]);
     }
 
     public function getGabunganCf($cfArr)

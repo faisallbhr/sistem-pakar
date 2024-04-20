@@ -62,4 +62,16 @@
             </form>
         </div>
     </section>
+
+    @if (session('error'))
+        <script>
+            swal.fire({
+                title: 'Error',
+                icon: 'error',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ef4444',
+            });
+        </script>
+    @endif
 </x-app-layout>
