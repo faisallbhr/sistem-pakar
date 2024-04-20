@@ -99,7 +99,8 @@
                     <h2>{{ $diagnosa_dipilih['kode_depresi']->kode }} |
                         {{ $diagnosa_dipilih['kode_depresi']->deskripsi }}</h2>
                     <p>Jadi dapat disimpulkan bahwa pasien mengalami tingkat depresi yaitu
-                        {{ round($hasil['value'] * 100, 2) }}</p>
+                        {{ $diagnosa_dipilih['kode_depresi']->deskripsi }}
+                        sebesar {{ $diagnosa_dipilih['value'] * 100 }}%</p>
                 </div>
             </div>
 
