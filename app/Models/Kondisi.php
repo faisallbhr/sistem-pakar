@@ -13,27 +13,19 @@ class Kondisi extends Model
     {
         $kondisi = [
             [
-                'deskripsi' => 'Tidak Tahu',
+                'deskripsi' => 'Tidak Pernah',
                 'nilai' => 0.0,
             ],
             [
-                'deskripsi' => 'Tidak Yakin',
-                'nilai' => 0.2,
+                'deskripsi' => 'Jarang',
+                'nilai' => 0.3,
             ],
             [
-                'deskripsi' => 'Mungkin',
-                'nilai' => 0.4,
-            ],
-            [
-                'deskripsi' => 'Kemungkinan Besar',
+                'deskripsi' => 'Sering',
                 'nilai' => 0.6,
             ],
             [
-                'deskripsi' => 'Hampir Pasti',
-                'nilai' => 0.8,
-            ],
-            [
-                'deskripsi' => 'Pasti',
+                'deskripsi' => 'Pernah',
                 'nilai' => 1,
             ],
         ];
