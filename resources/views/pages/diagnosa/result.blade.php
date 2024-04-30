@@ -14,9 +14,9 @@
                 <tbody>
                     <tr>
                         <td class="py-2 text-center border-b border-r-indigo-200">
-                            {{ $diagnosa_dipilih['kode_depresi']->kode }} |
-                            {{ $diagnosa_dipilih['kode_depresi']->deskripsi }}</td>
-                        <td class="py-2 text-center border-b border-r-indigo-200">{{ $diagnosa_dipilih['value'] * 100 }}%
+                            {{ $diagnosa->kode_depresi }} |
+                            {{ $diagnosa->deskripsi }}</td>
+                        <td class="py-2 text-center border-b border-r-indigo-200">{{ $diagnosa->persentase }}%
                         </td>
                     </tr>
                 </tbody>
@@ -38,12 +38,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pakar as $item)
+                            @foreach ($cfPakar as $item)
                                 <tr>
                                     <td class="py-2 text-center border-b">{{ $loop->iteration }}</td>
-                                    <td class="py-2 text-center border-b">{{ $item->kode_gejala }} |
-                                        {{ $item->kode_depresi }}</td>
-                                    <td class="py-2 text-center border-b">{{ $item->mb - $item->md }}</td>
+                                    <td class="py-2 text-center border-b">{{ $item['kode_gejala'] }} |
+                                        {{ $item['kode_depresi'] }}</td>
+                                    <td class="py-2 text-center border-b">{{ $item['mb'] - $item['md'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -62,11 +62,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($gejala_by_user as $item)
+                            @foreach ($cfUser as $kodeGejala => $nilai)
                                 <tr>
                                     <td class="py-2 text-center border-b">{{ $loop->iteration }}</td>
-                                    <td class="py-2 text-center border-b">{{ $item[0] }} </td>
-                                    <td class="py-2 text-center border-b">{{ $item[1] }}</td>
+                                    <td class="py-2 text-center border-b">{{ $kodeGejala }} </td>
+                                    <td class="py-2 text-center border-b">{{ $nilai }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -82,7 +82,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($cfKombinasi['cf'] as $item)
+                            @foreach ($cfHasil as $item)
                                 <tr>
                                     <td class="py-2 text-center border-b">{{ $item }}</td>
                                 </tr>
@@ -96,11 +96,11 @@
             <div>
                 <h2>Hasil</h2>
                 <div>
-                    <h2>{{ $diagnosa_dipilih['kode_depresi']->kode }} |
-                        {{ $diagnosa_dipilih['kode_depresi']->deskripsi }}</h2>
+                    <h2>{{ $diagnosa->kode_depresi }} |
+                        {{ $diagnosa->deskripsi }}</h2>
                     <p>Jadi dapat disimpulkan bahwa pasien mengalami tingkat depresi yaitu
-                        {{ $diagnosa_dipilih['kode_depresi']->deskripsi }}
-                        sebesar {{ $diagnosa_dipilih['value'] * 100 }}%</p>
+                        {{ $diagnosa->deskripsi }}
+                        sebesar {{ $diagnosa->persentase }}%</p>
                 </div>
             </div>
 

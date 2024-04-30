@@ -43,7 +43,7 @@
                                             class="px-3 py-2 text-xs font-medium uppercase duration-100 border border-blue-100 rounded-full shadow-md cursor-pointer bg-slate-100 hover:text-white text-slate-600 hover:bg-blue-500">{{ $kondisi->deskripsi }}</label>
                                     </li>
                                 @endforeach
-                                <input type="hidden" name="kondisi[{{ $gejala->kode }}]"
+                                <input type="hidden" name="cf_user[{{ $gejala->kode }}]"
                                     id="kondisi_{{ $gejala->kode }}" value="" />
                             </ul>
                         </div>

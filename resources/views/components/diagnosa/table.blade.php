@@ -18,31 +18,16 @@
     </thead>
     <tbody>
         @foreach ($diagnosas as $diagnosa)
-            <?php
-            $highestValue = 0;
-            $data = json_decode($diagnosa->data, true);
-            
-            foreach ($data as $item) {
-                if (floatval($item['value']) > $highestValue) {
-                    $highestDiagnosas['value'] = floatval($item['value']);
-                    $highestDiagnosas['depresi'] = \DB::table('depresis')
-                        ->where('kode', $item['kode_depresi'])
-                        ->first();
-                    $highestDiagnosas['name'] = $diagnosa->name;
-                    $highestValue = floatval($item['value']);
-                }
-            }
-            ?>
             <tr class="hover:bg-gray-100">
                 <td class="py-2 text-center border-b">
-                    {{ $loop->iteration }}</td>
+                    {{ ($diagnosas->currentPage() - 1) * $diagnosas->perPage() + $loop->iteration }}</td>
                 @if (Auth::user()->hasRole('guru'))
                     <td class="py-2 text-center border-b">
-                        {{ $highestDiagnosas['name'] }}</td>
+                        {{ $diagnosa->name }}</td>
                 @endif
-                <td class="py-2 text-center border-b">{{ $highestDiagnosas['depresi']->kode }} |
-                    {{ $highestDiagnosas['depresi']->deskripsi }}</td>
-                <td class="py-2 text-center border-b">{{ $highestDiagnosas['value'] * 100 }} %</td>
+                <td class="py-2 text-center border-b">{{ $diagnosa->kode_depresi }} |
+                    {{ $diagnosa->deskripsi }}</td>
+                <td class="py-2 text-center border-b">{{ $diagnosa->persentase }}%</td>
                 <td class="py-2 text-center border-b">{{ date('d/m/Y', strtotime($diagnosa->created_at)) }}</td>
                 <td class="py-2 text-center border-b">
                     <a href="{{ route('diagnosa.result.user', ['diagnosaId' => $diagnosa->id]) }}">

@@ -12,9 +12,14 @@ return new class extends Migration {
     {
         Schema::create('diagnosas', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->json('data');
-            $table->json('hasil');
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id');
+            $table->json('cf_pakar');
+            $table->json('cf_user');
+            $table->char('kode_depresi');
+            $table->float('persentase');
+
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('kode_depresi')->references('kode')->on('depresis')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

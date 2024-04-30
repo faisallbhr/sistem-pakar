@@ -6,11 +6,11 @@
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 Kode Gejala</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
-                Kode Depresi</th>
-            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 MB</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 MD</th>
+            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
+                Kode Depresi</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 rounded-r-md whitespace-nowrap text-ellipsis">
                 Aksi</th>
         </tr>
@@ -22,9 +22,9 @@
                     {{ ($keputusans->currentPage() - 1) * $keputusans->perPage() + $loop->iteration }}
                 </td>
                 <td class="py-2 text-center border-b">{{ $keputusan->kode_gejala }}</td>
-                <td class="py-2 text-center border-b">{{ $keputusan->kode_depresi }}</td>
                 <td class="py-2 text-center border-b">{{ $keputusan->mb }}</td>
                 <td class="py-2 text-center border-b">{{ $keputusan->md }}</td>
+                <td class="py-2 text-center border-b">{{ $keputusan->kode_depresi }}</td>
                 <td class="flex justify-center gap-2 py-2 text-center border-b">
                     <x-warning-button onclick="openKeputusanModal({{ $keputusan->id }})">Edit</x-warning-button>
                     <x-danger-button onclick="deleteGejala({{ $keputusan->id }})">Hapus</x-danger-button>

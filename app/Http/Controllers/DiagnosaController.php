@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Diagnosa;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -12,14 +11,16 @@ class DiagnosaController extends Controller
     {
         $query = \DB::table('diagnosas')
             ->select(
-                'diagnosas.id AS id',
-                'diagnosas.data AS data',
-                'diagnosas.hasil AS hasil',
-                'diagnosas.created_at AS created_at',
-                'users.name AS name'
+                'diagnosas.id',
+                'diagnosas.persentase',
+                'diagnosas.created_at',
+                'diagnosas.kode_depresi',
+                'users.name',
+                'depresis.deskripsi'
             )
-            ->orderBy('diagnosas.created_at', 'desc')
-            ->join('users', 'diagnosas.user_id', '=', 'users.id');
+            ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->orderBy('diagnosas.created_at', 'desc');
 
         if (\Auth::user()->hasRole('siswa')) {
             $query->where('user_id', \Auth::user()->id);
@@ -36,13 +37,15 @@ class DiagnosaController extends Controller
         $search = $request->input('search');
         $diagnosas = \DB::table('diagnosas')
             ->select(
-                'diagnosas.id AS id',
-                'diagnosas.data AS data',
-                'diagnosas.hasil AS hasil',
-                'diagnosas.created_at AS created_at',
-                'users.name AS name'
+                'diagnosas.id',
+                'diagnosas.persentase',
+                'diagnosas.created_at',
+                'diagnosas.kode_depresi',
+                'users.name',
+                'depresis.deskripsi'
             )
             ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
             ->where('users.name', 'like', "%{$search}%")
             ->orderBy('diagnosas.created_at', 'desc')
             ->paginate(10);
@@ -57,13 +60,16 @@ class DiagnosaController extends Controller
         $filterDate = \Carbon\Carbon::parse($filter);
         $diagnosas = \DB::table('diagnosas')
             ->select(
-                'diagnosas.id AS id',
-                'diagnosas.data AS data',
-                'diagnosas.hasil AS hasil',
-                'diagnosas.created_at AS created_at',
-                'users.name AS name'
+                'diagnosas.id',
+                'diagnosas.persentase',
+                'diagnosas.created_at',
+                'diagnosas.kode_depresi',
+                'users.name',
+                'depresis.deskripsi'
             )
             ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->where('user_id', \Auth::user()->id)
             ->whereDate('diagnosas.created_at', $filterDate->toDateString())
             ->orderBy('diagnosas.created_at', 'desc')
             ->paginate(10);
@@ -85,58 +91,56 @@ class DiagnosaController extends Controller
     {
         try {
             \DB::beginTransaction();
-            $filteredArray = $request->post('kondisi');
-            $kondisi = array_filter($filteredArray, function ($value) {
-                return $value !== null;
+
+            // Ambil input pengguna berupa gejala yang dipilih beserta nilai CF
+            $cfUserInput = array_filter($request->input('cf_user'), function ($value) {
+                return !is_null($value);
             });
 
-            $kodeGejala = [];
-            $bobotPilihan = [];
-            foreach ($kondisi as $key => $val) {
-                if ($val != "#") {
-                    array_push($kodeGejala, $key);
-                    array_push($bobotPilihan, array($key, $val));
-                }
-            }
+            // Mengambil semua rule dari tabel keputusans
+            $rules = \DB::table('keputusans')->get();
 
-            $depresi = \DB::table('depresis')->get();
-            $cf = 0;
+            // Array untuk menyimpan CF Gabungan untuk setiap kode depresi
+            $cfGabungan = [];
 
-            $arrGejala = [];
-            foreach ($depresi as $depressi) {
-                $cfArr = [
-                    "cf" => [],
-                    "kode_depresi" => []
-                ];
+            // Iterasi melalui rules
+            foreach ($rules as $rule) {
+                $kodeDepresi = $rule->kode_depresi;
+                $kodeGejala = $rule->kode_gejala;
 
-                $ruleSetiapDepresi = \DB::table('keputusans')
-                    ->whereIn('kode_gejala', $kodeGejala)
-                    ->where('kode_depresi', $depressi->kode)
-                    ->get();
+                // Periksa apakah kode gejala terdapat dalam inputan pengguna
+                if (isset($cfUserInput[$kodeGejala])) {
+                    $cfUser = floatval($cfUserInput[$kodeGejala]);
+                    $cfPakar = ($rule->mb - $rule->md) * $cfUser;
 
-                if (count($ruleSetiapDepresi) > 0) {
-                    foreach ($ruleSetiapDepresi as $ruleKey) {
-                        $cf = $ruleKey->mb - $ruleKey->md;
-                        array_push($cfArr["cf"], $cf);
-                        array_push($cfArr["kode_depresi"], $ruleKey->kode_depresi);
+                    // Perbarui atau tambahkan CF Gabungan
+                    if (isset($cfGabungan[$kodeDepresi])) {
+                        $cfGabungan[$kodeDepresi] = $cfGabungan[$kodeDepresi] + $cfPakar * (1 - $cfGabungan[$kodeDepresi]);
+                    } else {
+                        $cfGabungan[$kodeDepresi] = $cfPakar;
                     }
-
-                    $res = $this->getGabunganCf($cfArr);
-                    array_push($arrGejala, $res);
                 }
             }
 
-            if (!$bobotPilihan or !$arrGejala) {
-                \DB::rollBack();
-                return redirect()->back()->with('error', 'Harus menjawab paling tidak salah satu pertanyaan!');
-            }
+            // Temukan nilai CF Gabungan maksimum dan tentukan diagnos depresi akhir
+            $maxCF = max($cfGabungan);
+            $depresi = array_search($maxCF, $cfGabungan);
+
+            $cfPakarDiagnosa = \DB::table('keputusans')
+                ->where('kode_depresi', $depresi)
+                ->whereIn('kode_gejala', array_keys($cfUserInput))
+                ->get();
+
+            $cfUserInputFiltered = array_intersect_key($cfUserInput, $cfPakarDiagnosa->keyBy('kode_gejala')->toArray());
 
             $uuid = Str::uuid();
             \DB::table('diagnosas')->insert([
                 'id' => $uuid,
-                'data' => json_encode($arrGejala),
-                'hasil' => json_encode($bobotPilihan),
                 'user_id' => \Auth::user()->id,
+                'cf_pakar' => json_encode($cfPakarDiagnosa),
+                'cf_user' => json_encode($cfUserInputFiltered),
+                'kode_depresi' => $depresi,
+                'persentase' => $maxCF * 100,
                 'created_at' => now()
             ]);
 
@@ -148,99 +152,47 @@ class DiagnosaController extends Controller
         }
     }
 
-    public function getGabunganCf($cfArr)
-    {
-        if (empty($cfArr["cf"])) {
-            return 0;
-        }
-        if (count($cfArr["cf"]) == 1) {
-            return [
-                "value" => strval($cfArr["cf"][0]),
-                "kode_depresi" => $cfArr["kode_depresi"][0]
-            ];
-        }
-
-        $cfoldGabungan = $cfArr["cf"][0];
-
-        for ($i = 0; $i < count($cfArr["cf"]) - 1; $i++) {
-            $cfoldGabungan = $cfoldGabungan + ($cfArr["cf"][$i + 1] * (1 - $cfoldGabungan));
-        }
-
-        return [
-            "value" => "$cfoldGabungan",
-            "kode_depresi" => $cfArr["kode_depresi"][0]
-        ];
-    }
-
     public function result($diagnosaId)
     {
-        $diagnosa = \DB::table('diagnosas')->where('id', $diagnosaId)->first();
-        $gejala = json_decode($diagnosa->hasil, true);
-        $data_diagnosa = json_decode($diagnosa->data, true);
+        $diagnosa = \DB::table('diagnosas')
+            ->select(
+                'diagnosas.*',
+                'users.name',
+                'depresis.deskripsi'
+            )
+            ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->where('diagnosas.id', $diagnosaId)
+            ->first();
 
-        $int = 0.0;
-        $diagnosa_dipilih = [];
-        foreach ($data_diagnosa as $val) {
-            if (floatval($val["value"]) > $int) {
-                $diagnosa_dipilih["value"] = floatval($val["value"]);
-                $diagnosa_dipilih["kode_depresi"] = \DB::table('depresis')->where("kode", $val["kode_depresi"])->first();
-                $int = floatval($val["value"]);
+        $artikel = \DB::table('artikels')
+            ->where('kode_depresi', $diagnosa->kode_depresi)
+            ->first();
+
+        $cfPakar = json_decode($diagnosa->cf_pakar, true);
+        $cfUser = json_decode($diagnosa->cf_user, true);
+
+        $cfHasil = [];
+        foreach ($cfPakar as $pakar) {
+            $kodeGejala = $pakar['kode_gejala'];
+            $mb = $pakar['mb'];
+            $md = $pakar['md'];
+
+            if (isset($cfUser[$kodeGejala])) {
+                $cfPakarValue = $mb - $md;
+                $cfUserValue = floatval($cfUser[$kodeGejala]);
+                $cfHasilValue = $cfPakarValue * $cfUserValue;
+
+                $cfHasil[$kodeGejala] = $cfHasilValue;
             }
         }
-
-        $kodeGejala = array_column($gejala, 0);
-        $kode_depresi = $diagnosa_dipilih["kode_depresi"]->kode;
-        $pakar = \DB::table('keputusans')->whereIn("kode_gejala", $kodeGejala)->where("kode_depresi", $kode_depresi)->get();
-
-        $gejala_by_user = [];
-        foreach ($pakar as $key) {
-            foreach ($gejala as $gKey) {
-                if ($gKey[0] == $key->kode_gejala) {
-                    $gejala_by_user[] = $gKey;
-                }
-            }
-        }
-
-        $nilaiPakar = [];
-        foreach ($pakar as $key) {
-            $nilaiPakar[] = ($key->mb - $key->md);
-        }
-        $nilaiUser = array_column($gejala_by_user, 1);
-
-        $cfKombinasi = $this->getCfCombinasi($nilaiPakar, $nilaiUser);
-        $hasil = $this->getGabunganCf($cfKombinasi);
-
-        $artikel = \DB::table('artikels')->where('kode_depresi', $kode_depresi)->first();
-
-        // dd([
-        //     'diagnosa' => $diagnosa,
-        //     'diagnosa_dipilih' => $diagnosa_dipilih,
-        //     'gejala' => $gejala,
-        //     'data_diagnosa' => $data_diagnosa,
-        //     'pakar' => $pakar,
-        //     'gejala_by_user' => $gejala_by_user,
-        //     'cfKombinasi' => $cfKombinasi,
-        //     'hasil' => $hasil
-        // ]);
-
-        return view('pages.diagnosa.result', compact('diagnosa', 'diagnosa_dipilih', 'data_diagnosa', 'pakar', 'gejala_by_user', 'cfKombinasi', 'hasil', 'artikel'));
+        // dd($cfUser);
+        return view('pages.diagnosa.result', [
+            'diagnosa' => $diagnosa,
+            'cfPakar' => $cfPakar,
+            'cfUser' => $cfUser,
+            'cfHasil' => $cfHasil,
+            'artikel' => $artikel,
+        ]);
     }
-
-    public function getCfCombinasi($pakar, $user)
-    {
-        $cfComb = [];
-        if (count($pakar) == count($user)) {
-            for ($i = 0; $i < count($pakar); $i++) {
-                $res = $pakar[$i] * $user[$i];
-                $cfComb[] = floatval($res);
-            }
-            return [
-                "cf" => $cfComb,
-                "kode_depresi" => ["0"]
-            ];
-        } else {
-            return "Data tidak valid";
-        }
-    }
-
 }
