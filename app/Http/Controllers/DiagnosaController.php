@@ -111,18 +111,18 @@ class DiagnosaController extends Controller
                 // Periksa apakah kode gejala terdapat dalam inputan pengguna
                 if (isset($cfUserInput[$kodeGejala])) {
                     $cfUser = floatval($cfUserInput[$kodeGejala]);
-                    $cfPakar = ($rule->mb - $rule->md) * $cfUser;
+                    $cfPartial = ($rule->mb - $rule->md) * $cfUser;
 
                     // Perbarui atau tambahkan CF Gabungan
                     if (isset($cfGabungan[$kodeDepresi])) {
-                        $cfGabungan[$kodeDepresi] = $cfGabungan[$kodeDepresi] + $cfPakar * (1 - $cfGabungan[$kodeDepresi]);
+                        $cfGabungan[$kodeDepresi] = $cfGabungan[$kodeDepresi] + $cfPartial * (1 - $cfGabungan[$kodeDepresi]);
                     } else {
-                        $cfGabungan[$kodeDepresi] = $cfPakar;
+                        $cfGabungan[$kodeDepresi] = $cfPartial;
                     }
                 }
             }
 
-            // Temukan nilai CF Gabungan maksimum dan tentukan diagnos depresi akhir
+            // Temukan nilai CF Gabungan maksimum dan tentukan diagnosa depresi akhir
             $maxCF = max($cfGabungan);
             $depresi = array_search($maxCF, $cfGabungan);
 
@@ -186,7 +186,7 @@ class DiagnosaController extends Controller
                 $cfHasil[$kodeGejala] = $cfHasilValue;
             }
         }
-        // dd($cfUser);
+
         return view('pages.diagnosa.result', [
             'diagnosa' => $diagnosa,
             'cfPakar' => $cfPakar,
