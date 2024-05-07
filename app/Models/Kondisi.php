@@ -17,15 +17,15 @@ class Kondisi extends Model
                 'nilai' => 0.0,
             ],
             [
+                'deskripsi' => 'Pernah',
+                'nilai' => 0.33,
+            ],
+            [
                 'deskripsi' => 'Jarang',
-                'nilai' => 0.3,
+                'nilai' => 0.66,
             ],
             [
                 'deskripsi' => 'Sering',
-                'nilai' => 0.6,
-            ],
-            [
-                'deskripsi' => 'Pernah',
                 'nilai' => 1,
             ],
         ];
