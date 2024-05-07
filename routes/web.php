@@ -56,8 +56,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/keputusan', [KeputusanController::class, 'index'])->name('keputusan.index');
     Route::get('/keputusan/search', [KeputusanController::class, 'search'])->name('keputusan.search');
     Route::post('/keputusan', [KeputusanController::class, 'store'])->name('keputusan.store');
-    Route::put('/keputusan/{id}', [KeputusanController::class, 'update'])->name('keputusan.update');
-    Route::delete('/keputusan/{id}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
+    Route::put('/keputusan/{kode_rule}', [KeputusanController::class, 'update'])->name('keputusan.update');
+    Route::delete('/keputusan/{kode_rule}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
 
     // DIAGNOSA ROUTE
     Route::get('/diagnosa/test', [DiagnosaController::class, 'test'])->name('diagnosa.test');

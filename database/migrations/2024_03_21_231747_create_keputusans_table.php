@@ -12,10 +12,10 @@ return new class extends Migration {
     {
         Schema::create('keputusans', function (Blueprint $table) {
             $table->id();
+            $table->char('kode_rule');
             $table->char('kode_gejala');
             $table->char('kode_depresi');
-            $table->float('mb');
-            $table->float('md');
+            $table->float('cf');
             $table->timestamps();
 
             $table->foreign('kode_gejala')->references('kode')->on('gejalas')->cascadeOnDelete()->cascadeOnUpdate();

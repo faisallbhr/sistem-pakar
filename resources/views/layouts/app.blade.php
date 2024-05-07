@@ -79,6 +79,8 @@
                 gejalaModal.style.display = 'none';
                 $('#kode_gejala').val('');
                 $('#deskripsi_gejala').val('');
+                $('#mb_gejala').val('');
+                $('#md_gejala').val('');
             } else if (event.target == depresiModal) {
                 depresiModal.style.display = 'none';
                 $('#kode_depresi').val('');
@@ -89,10 +91,19 @@
                 $('#nilai_kondisi').val('');
             } else if (event.target == keputusanModal) {
                 keputusanModal.style.display = 'none';
-                $('#kode_gejala_keputusan').val('');
-                $('#kode_depresi_keputusan').val('');
-                $('#mb_keputusan').val('');
-                $('#md_keputusan').val('');
+
+                const form = document.querySelector('#keputusan-modal form');
+                form.querySelector('input[name="kode_rule"]').value = '';
+                form.querySelector('select[name="kode_depresi"]').value = '';
+                form.querySelector('input[name="cf"]').value = '';
+
+                const gejalaTemplate = document.querySelector('.gejala-item');
+                const gejalaContainer = document.querySelector('#gejala_container');
+                gejalaContainer.innerHTML = '';
+
+                const newGejalaItem = gejalaTemplate.cloneNode(true);
+                newGejalaItem.querySelector('select[name="kode_gejala[]"]').value = '';
+                gejalaContainer.appendChild(newGejalaItem);
             }
         }
     </script>

@@ -7,6 +7,12 @@
                 Kode Gejala</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 Deskripsi Gejala</th>
+            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
+                MB</th>
+            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
+                MD</th>
+            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
+                CF</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 rounded-r-md whitespace-nowrap text-ellipsis">
                 Aksi</th>
         </tr>
@@ -18,6 +24,9 @@
                     {{ ($gejalas->currentPage() - 1) * $gejalas->perPage() + $loop->iteration }}</td>
                 <td class="py-2 text-center border-b">{{ $gejala->kode }}</td>
                 <td class="py-2 text-center border-b">{{ $gejala->deskripsi }}</td>
+                <td class="py-2 text-center border-b">{{ $gejala->mb }}</td>
+                <td class="py-2 text-center border-b">{{ $gejala->md }}</td>
+                <td class="py-2 text-center border-b">{{ $gejala->mb - $gejala->md }}</td>
                 <td class="flex justify-center gap-2 py-2 text-center border-b">
                     <x-warning-button onclick="openGejalaModal('{{ $gejala->kode }}')">Edit</x-warning-button>
                     <x-danger-button onclick="deleteGejala('{{ $gejala->kode }}')">Hapus</x-danger-button>
@@ -58,6 +67,8 @@
 
             $('#kode_gejala').val(gejala.kode);
             $('#deskripsi_gejala').val(gejala.deskripsi);
+            $('#mb_gejala').val(gejala.mb);
+            $('#md_gejala').val(gejala.md);
         } else {
             judul.innerText = 'tambah data gejala'
         }
@@ -71,6 +82,8 @@
         modal.style.display = 'none';
         $('#kode_gejala').val('');
         $('#deskripsi_gejala').val('');
+        $('#mb_gejala').val('');
+        $('#md_gejala').val('');
     }
     // modal end
 

@@ -30,11 +30,17 @@ class GejalaController extends Controller
             \DB::beginTransaction();
             $validated = $request->validate([
                 'kode' => 'required|unique:gejalas,kode',
-                'deskripsi' => 'required'
+                'deskripsi' => 'required',
+                'mb' => 'required|numeric',
+                'md' => 'required|numeric'
             ], [
                 'kode.required' => 'Kode gejala wajib diisi.',
                 'kode.unique' => 'Kode gejala sudah digunakan.',
-                'deskripsi.required' => 'Deskripsi gejala wajib diisi.'
+                'deskripsi.required' => 'Deskripsi gejala wajib diisi.',
+                'mb.required' => 'Nilai MB wajib diisi',
+                'mb.numeric' => 'Nilai MB harus berupa numeric',
+                'md.required' => 'Nilai MD wajib diisi',
+                'md.numeric' => 'Nilai MD harus berupa numeric',
             ]);
 
             \DB::table('gejalas')->insert($validated);
@@ -51,11 +57,17 @@ class GejalaController extends Controller
             \DB::beginTransaction();
             $validated = $request->validate([
                 'kode' => 'required|unique:gejalas,kode,' . $kode . ',kode',
-                'deskripsi' => 'required'
+                'deskripsi' => 'required',
+                'mb' => 'required|numeric',
+                'md' => 'required|numeric'
             ], [
                 'kode.required' => 'Kode gejala wajib diisi.',
                 'kode.unique' => 'Kode gejala sudah digunakan.',
-                'deskripsi.required' => 'Deskripsi gejala wajib diisi.'
+                'deskripsi.required' => 'Deskripsi gejala wajib diisi.',
+                'mb.required' => 'Nilai MB wajib diisi',
+                'mb.numeric' => 'Nilai MB harus berupa numeric',
+                'md.required' => 'Nilai MD wajib diisi',
+                'md.numeric' => 'Nilai MD harus berupa numeric',
             ]);
 
             \DB::table('gejalas')->where('kode', $kode)->update($validated);

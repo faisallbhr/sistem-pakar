@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('gejalas', function (Blueprint $table) {
             $table->char('kode')->primary()->unique();
             $table->string('deskripsi');
+            $table->float('mb');
+            $table->float('md');
             $table->timestamps();
         });
     }
