@@ -27,7 +27,13 @@
                 @endif
                 <td class="py-2 text-center border-b">{{ $diagnosa->kode_depresi }} |
                     {{ $diagnosa->deskripsi }}</td>
-                <td class="py-2 text-center border-b">{{ $diagnosa->persentase }}%</td>
+                <td class="py-2 text-center border-b">
+                    @if ($diagnosa->persentase == 0)
+                        -
+                    @else
+                        {{ $diagnosa->persentase }}%
+                    @endif
+                </td>
                 <td class="py-2 text-center border-b">{{ date('d/m/Y', strtotime($diagnosa->created_at)) }}</td>
                 <td class="py-2 text-center border-b">
                     <a href="{{ route('diagnosa.result.user', ['diagnosaId' => $diagnosa->id]) }}">

@@ -30,8 +30,8 @@
                 <div class="my-8 space-y-12">
                     @foreach ($gejalas as $gejala)
                         <div class="space-y-3">
-                            <h3>{{ $loop->iteration }} Apakah anda merasa
-                                {{ $gejala->deskripsi }}?</h3>
+                            <h3>{{ $loop->iteration }} Apakah anda merasa <span
+                                    class="lowercase">{{ $gejala->deskripsi }}</span>?</h3>
                             <ul class="flex flex-wrap gap-6 md:ml-3">
                                 @foreach ($kondisis as $kondisi)
                                     <li>

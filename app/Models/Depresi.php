@@ -13,6 +13,10 @@ class Depresi extends Model
     {
         $depresi = [
             [
+                "kode" => "P000",
+                "deskripsi" => "Tidak Depresi"
+            ],
+            [
                 "kode" => "P001",
                 "deskripsi" => "Gangguan Mood"
             ],
@@ -28,6 +32,7 @@ class Depresi extends Model
                 "kode" => "P004",
                 "deskripsi" => "Depresi Berat"
             ],
+            
         ];
         return $depresi;
     }

@@ -13,14 +13,15 @@ return new class extends Migration {
         Schema::create('diagnosas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id');
-            $table->json('cf_pakar');
+            $table->json('evidence');
             $table->json('cf_user');
+            $table->json('min_gejala');
+            $table->json('cf_rule');
             $table->char('kode_depresi');
             $table->float('persentase');
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreign('kode_depresi')->references('kode')->on('depresis')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->timestamps();
         });
     }
 
