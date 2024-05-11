@@ -60,6 +60,11 @@
             $('#deskripsi_depresi').val(depresi.deskripsi);
         } else {
             judul.innerText = 'tambah data depresi'
+            form.action = "{{ route('depresi.store') }}";
+            const inputMethod = document.querySelector('[name="_method"]');
+            if (inputMethod) {
+                inputMethod.remove();
+            }
         }
 
         const modal = document.getElementById('depresi-modal');

@@ -88,6 +88,11 @@
             inputCf.value = cf;
         } else {
             judul.innerText = 'Tambah Data Keputusan';
+            form.action = "{{ route('keputusan.store') }}";
+            const inputMethod = document.querySelector('[name="_method"]');
+            if (inputMethod) {
+                inputMethod.remove();
+            }
         }
 
         const modal = document.getElementById('keputusan-modal');

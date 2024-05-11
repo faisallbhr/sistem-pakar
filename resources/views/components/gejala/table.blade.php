@@ -71,6 +71,11 @@
             $('#md_gejala').val(gejala.md);
         } else {
             judul.innerText = 'tambah data gejala'
+            form.action = "{{ route('gejala.store') }}";
+            const inputMethod = document.querySelector('[name="_method"]');
+            if (inputMethod) {
+                inputMethod.remove();
+            }
         }
 
         const modal = document.getElementById('gejala-modal');

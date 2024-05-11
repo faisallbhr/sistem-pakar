@@ -61,6 +61,11 @@
             $('#nilai_kondisi').val(konsisi.nilai);
         } else {
             judul.innerText = 'tambah data kondisi'
+            form.action = "{{ route('kondisi.store') }}";
+            const inputMethod = document.querySelector('[name="_method"]');
+            if (inputMethod) {
+                inputMethod.remove();
+            }
         }
 
         const modal = document.getElementById('kondisi-modal');
