@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -20,7 +21,7 @@ class DashboardController extends Controller
             ->where('roles.name', 'guru')
             ->count();
         $diagnosaSiswa = DB::table('diagnosas')
-            ->where('user_id', \Auth::user()->id)
+            ->where('user_id', Auth::user()->id)
             ->count();
 
         return view('pages/dashboard/dashboard', compact('gejala', 'kondisi', 'depresi', 'keputusan', 'diagnosa', 'admin', 'diagnosaSiswa'));

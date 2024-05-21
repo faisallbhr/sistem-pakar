@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
