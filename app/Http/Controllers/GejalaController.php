@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 
 class GejalaController extends Controller
 {
     public function index()
     {
-        $gejalas = \DB::table('gejalas')->paginate(10);
+        $gejalas = DB::table('gejalas')->paginate(10);
         return view('pages.gejala.index', [
             'gejalas' => $gejalas
         ]);
@@ -16,7 +18,7 @@ class GejalaController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-        $gejalas = \DB::table('gejalas')
+        $gejalas = DB::table('gejalas')
             ->where('kode', 'like', "%{$search}%")
             ->paginate(10);
 
@@ -27,7 +29,7 @@ class GejalaController extends Controller
     public function store(Request $request)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $validated = $request->validate([
                 'kode' => 'required|unique:gejalas,kode',
                 'deskripsi' => 'required',
@@ -43,18 +45,18 @@ class GejalaController extends Controller
                 'md.numeric' => 'Nilai MD harus berupa numeric',
             ]);
 
-            \DB::table('gejalas')->insert($validated);
-            \DB::commit();
+            DB::table('gejalas')->insert($validated);
+            DB::commit();
             return redirect()->back()->with('success', 'Berhasil menambahkan data gejala!');
-        } catch (\Exception $e) {
-            \DB::rollBack();
+        } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function update(Request $request, $kode)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $validated = $request->validate([
                 'kode' => 'required|unique:gejalas,kode,' . $kode . ',kode',
                 'deskripsi' => 'required',
@@ -70,21 +72,21 @@ class GejalaController extends Controller
                 'md.numeric' => 'Nilai MD harus berupa numeric',
             ]);
 
-            \DB::table('gejalas')->where('kode', $kode)->update($validated);
-            \DB::commit();
+            DB::table('gejalas')->where('kode', $kode)->update($validated);
+            DB::commit();
             return redirect()->back()->with('success', 'Berhasil mengubah data gejala!');
-        } catch (\Exception $e) {
-            \DB::rollBack();
+        } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function destroy($kode)
     {
         try {
-            \DB::table('gejalas')->where('kode', $kode)->delete();
+            DB::table('gejalas')->where('kode', $kode)->delete();
             return redirect()->back()->with('success', 'Berhasil menghapus data gejala!');
-        } catch (\Exception $e) {
-            \DB::rollBack();
+        } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

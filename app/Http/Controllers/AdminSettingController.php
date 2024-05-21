@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -12,7 +13,7 @@ class AdminSettingController extends Controller
     {
         $guruRole = Role::where('name', 'guru')->first();
 
-        $admins = \DB::table('users')
+        $admins = DB::table('users')
             ->select(
                 'name',
                 'email'

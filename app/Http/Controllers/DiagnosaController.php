@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use Auth;
+use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -9,7 +13,7 @@ class DiagnosaController extends Controller
 {
     public function index()
     {
-        $query = \DB::table('diagnosas')
+        $query = DB::table('diagnosas')
             ->select(
                 'diagnosas.id',
                 'diagnosas.persentase',
@@ -22,8 +26,8 @@ class DiagnosaController extends Controller
             ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
             ->orderBy('diagnosas.created_at', 'desc');
 
-        if (\Auth::user()->hasRole('siswa')) {
-            $query->where('user_id', \Auth::user()->id);
+        if (Auth::user()->hasRole('siswa')) {
+            $query->where('user_id', Auth::user()->id);
         }
 
         $diagnosas = $query->paginate(10);
@@ -35,7 +39,7 @@ class DiagnosaController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-        $diagnosas = \DB::table('diagnosas')
+        $diagnosas = DB::table('diagnosas')
             ->select(
                 'diagnosas.id',
                 'diagnosas.persentase',
@@ -57,8 +61,8 @@ class DiagnosaController extends Controller
     public function filter(Request $request)
     {
         $filter = $request->input('filter');
-        $filterDate = \Carbon\Carbon::parse($filter);
-        $diagnosas = \DB::table('diagnosas')
+        $filterDate = Carbon::parse($filter);
+        $diagnosas = DB::table('diagnosas')
             ->select(
                 'diagnosas.id',
                 'diagnosas.persentase',
@@ -69,7 +73,7 @@ class DiagnosaController extends Controller
             )
             ->join('users', 'diagnosas.user_id', '=', 'users.id')
             ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
-            ->where('user_id', \Auth::user()->id)
+            ->where('user_id', Auth::user()->id)
             ->whereDate('diagnosas.created_at', $filterDate->toDateString())
             ->orderBy('diagnosas.created_at', 'desc')
             ->paginate(10);
@@ -80,8 +84,8 @@ class DiagnosaController extends Controller
     }
     public function test()
     {
-        $gejalas = \DB::table('gejalas')->get();
-        $kondisis = \DB::table('kondisis')->get();
+        $gejalas = DB::table('gejalas')->get();
+        $kondisis = DB::table('kondisis')->get();
         return view('pages.diagnosa.test', [
             'gejalas' => $gejalas,
             'kondisis' => $kondisis
@@ -90,18 +94,18 @@ class DiagnosaController extends Controller
     public function store(Request $request)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $evidence = array_filter($request->input('cf_user'), function ($value) {
                 return !is_null($value);
             });
 
-            $gejalas = \DB::table('gejalas')
+            $gejalas = DB::table('gejalas')
                 ->whereIn('kode', array_keys($evidence))
                 ->get()
                 ->keyBy('kode');
 
-            $rules = \DB::table('keputusans')->get();
+            $rules = DB::table('keputusans')->get();
 
             $cfResults = [];
 
@@ -153,15 +157,15 @@ class DiagnosaController extends Controller
             }
 
             if ($maxValue == 0) {
-                $depresiDiagnosa = \DB::table('depresis')->where('kode', 'P000')->pluck('kode')->first();
+                $depresiDiagnosa = DB::table('depresis')->where('kode', 'P000')->pluck('kode')->first();
             } else {
-                $depresiDiagnosa = \DB::table('keputusans')->where('kode_rule', $maxRule)->pluck('kode_depresi')->first();
+                $depresiDiagnosa = DB::table('keputusans')->where('kode_rule', $maxRule)->pluck('kode_depresi')->first();
             }
 
             $uuid = Str::uuid();
-            \DB::table('diagnosas')->insert([
+            DB::table('diagnosas')->insert([
                 'id' => $uuid,
-                'user_id' => \Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'evidence' => json_encode($evidence),
                 'cf_user' => json_encode($cfResults),
                 'min_gejala' => json_encode($minGejala),
@@ -171,17 +175,17 @@ class DiagnosaController extends Controller
                 'created_at' => now()
             ]);
 
-            \DB::commit();
+            DB::commit();
             return redirect()->route('diagnosa.result.user', ["diagnosaId" => $uuid]);
-        } catch (\Exception $e) {
-            \DB::rollBack();
+        } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function result($diagnosaId)
     {
-        $diagnosa = \DB::table('diagnosas')
+        $diagnosa = DB::table('diagnosas')
             ->select(
                 'diagnosas.*',
                 'users.name',
@@ -194,7 +198,7 @@ class DiagnosaController extends Controller
 
         $artikel = null;
         if ($diagnosa->kode_depresi != 'P000') {
-            $artikel = \DB::table('artikels')->where('kode_depresi', $diagnosa->kode_depresi)->first();
+            $artikel = DB::table('artikels')->where('kode_depresi', $diagnosa->kode_depresi)->first();
         }
 
         return view('pages.diagnosa.result', [
