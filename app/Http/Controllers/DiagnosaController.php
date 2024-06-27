@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -32,10 +33,8 @@ class DiagnosaController extends Controller
     }
     public function history($userId)
     {
-        if (!Auth::user()->hasRole('guru')) {
-            if (Auth::user()->id != $userId) {
-                return redirect()->back();
-            }
+        if (!Auth::user()->hasRole('guru') && Auth::user()->id != $userId) {
+            return redirect()->back();
         }
 
         $history = DB::table('diagnosas')

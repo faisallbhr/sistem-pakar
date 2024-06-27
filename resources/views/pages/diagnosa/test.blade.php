@@ -25,7 +25,7 @@
                 <p>Tidak semua field harus diisi, jadi pastikan untuk memberikan jawaban yang tepat sesuai dengan
                     pengalamanmu.</p>
             </div>
-            <form action="{{ route('diagnosa.store') }}" method="POST" enctype='multipart/form-data' novalidate>
+            <form id="diagnosaForm" action="{{ route('diagnosa.store') }}" method="POST" enctype='multipart/form-data'>
                 @csrf
                 <div class="my-8 space-y-12">
                     @foreach ($gejalas as $gejala)
@@ -74,4 +74,34 @@
             });
         </script>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('diagnosaForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const cfUserInputs = document.querySelectorAll('input[name^="cf_user"]');
+
+                let allFilled = true;
+                cfUserInputs.forEach(input => {
+                    if (!input.value) {
+                        allFilled = false;
+                    }
+                });
+
+                if (!allFilled) {
+                    swal.fire({
+                        title: 'Error',
+                        icon: 'error',
+                        text: 'Semua pertanyaan wajib diisi!',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ef4444',
+                    });
+                } else {
+                    form.submit();
+                }
+            });
+        });
+    </script>
 </x-app-layout>
