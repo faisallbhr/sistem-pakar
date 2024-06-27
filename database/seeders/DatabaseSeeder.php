@@ -27,20 +27,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'guru'
         ]);
 
-        $siswaRole = Role::create([
-            'name' => 'siswa'
+        $kelas1Role = Role::create([
+            'name' => 'kelas 1'
         ]);
 
-        $guruPermission = Permission::create([
-            'name' => 'guru'
+        $kelas2Role = Role::create([
+            'name' => 'kelas 2'
         ]);
 
-        $siswaPermission = Permission::create([
-            'name' => 'siswa'
+        $kelas3Role = Role::create([
+            'name' => 'kelas 3'
         ]);
-
-        $guruRole->givePermissionTo($guruPermission);
-        $siswaRole->givePermissionTo($siswaPermission);
 
         $guru = User::create([
             'name' => 'NOVIA ZAHRUL SHOFI',
@@ -48,14 +45,28 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
 
-        $siswa = User::create([
+        $kelas1 = User::create([
             'name' => 'Novia',
             'email' => 'noviasiswa@gmail.com',
             'password' => bcrypt('password')
         ]);
 
+        $kelas2 = User::create([
+            'name' => 'Kelas 2',
+            'email' => 'kelas2@gmail.com',
+            'password' => bcrypt('password')
+        ]);
+
+        $kelas3 = User::create([
+            'name' => 'Kelas 3',
+            'email' => 'kelas3@gmail.com',
+            'password' => bcrypt('password')
+        ]);
+
         $guru->assignRole($guruRole);
-        $siswa->assignRole($siswaRole);
+        $kelas1->assignRole($kelas1Role);
+        $kelas2->assignRole($kelas2Role);
+        $kelas3->assignRole($kelas3Role);
 
         $gejala = new Gejala();
         $depresi = new Depresi();

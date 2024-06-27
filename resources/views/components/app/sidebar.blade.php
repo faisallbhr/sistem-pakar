@@ -79,7 +79,7 @@
                         </a>
                     </li>
                     <!-- gejala -->
-                    @can('guru')
+                    @role('guru')
                         <li
                             class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (in_array(Request::segment(1), ['gejala'])) {{ 'bg-slate-900' }} @endif">
                             <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (in_array(Request::segment(1), ['gejala'])) {{ 'hover:text-slate-200' }} @endif"
@@ -98,9 +98,7 @@
                                 </div>
                             </a>
                         </li>
-                    @endcan
-                    <!-- kondisi -->
-                    @can('guru')
+                        <!-- kondisi -->
                         <li
                             class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (in_array(Request::segment(1), ['kondisi'])) {{ 'bg-slate-900' }} @endif">
                             <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (in_array(Request::segment(1), ['kondisi'])) {{ 'hover:text-slate-200' }} @endif"
@@ -122,9 +120,7 @@
                                 </div>
                             </a>
                         </li>
-                    @endcan
-                    <!-- depresi -->
-                    @can('guru')
+                        <!-- depresi -->
                         <li
                             class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (in_array(Request::segment(1), ['depresi'])) {{ 'bg-slate-900' }} @endif">
                             <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (in_array(Request::segment(1), ['depresi'])) {{ 'hover:text-slate-200' }} @endif"
@@ -143,9 +139,7 @@
                                 </div>
                             </a>
                         </li>
-                    @endcan
-                    <!-- keputusan -->
-                    @can('guru')
+                        <!-- keputusan -->
                         <li
                             class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (in_array(Request::segment(1), ['keputusan'])) {{ 'bg-slate-900' }} @endif">
                             <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (in_array(Request::segment(1), ['keputusan'])) {{ 'hover:text-slate-200' }} @endif"
@@ -167,7 +161,7 @@
                                 </div>
                             </a>
                         </li>
-                    @endcan
+                    @endrole
                     <!-- diagnosa -->
                     <li class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (in_array(Request::segment(1), ['diagnosa'])) {{ 'bg-slate-900' }} @endif"
                         x-data="{ open: {{ in_array(Request::segment(1), ['diagnosa']) ? 1 : 0 }} }">
@@ -219,7 +213,7 @@
                 </ul>
             </div>
             <!-- More group -->
-            @can('guru')
+            @role('guru')
                 <div>
                     <h3 class="pl-3 text-xs font-semibold uppercase text-slate-500">
                         <span class="hidden w-6 text-center lg:block lg:sidebar-expanded:hidden 2xl:hidden"
@@ -280,7 +274,7 @@
                         </li>
                     </ul>
                 </div>
-            @endcan
+            @endrole
         </div>
 
         <!-- Expand / collapse button -->

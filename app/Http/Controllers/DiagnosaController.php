@@ -26,7 +26,7 @@ class DiagnosaController extends Controller
             ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
             ->orderBy('diagnosas.created_at', 'desc');
 
-        if (Auth::user()->hasRole('siswa')) {
+        if (!Auth::user()->hasRole('guru')) {
             $query->where('user_id', Auth::user()->id);
         }
 

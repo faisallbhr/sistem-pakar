@@ -23,11 +23,8 @@
         x-transition:leave-end="opacity-0" x-cloak>
         <div class="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200 dark:border-slate-700">
             <div class="font-medium text-slate-800 dark:text-slate-100">{{ Auth::user()->name }}</div>
-            @if (Auth::user()->hasRole('guru'))
-                <div class="text-xs text-slate-500 dark:text-slate-400 italic">Guru</div>
-            @elseif(Auth::user()->hasRole('siswa'))
-                <div class="text-xs text-slate-500 dark:text-slate-400 italic">Siswa</div>
-            @endif
+            <div class="text-xs text-slate-500 dark:text-slate-400 italic capitalize">{{ Auth::user()->roles[0]->name }}
+            </div>
         </div>
         <ul>
             <li>

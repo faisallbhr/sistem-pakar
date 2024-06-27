@@ -4,7 +4,7 @@
         <!-- Welcome banner -->
         <x-dashboard.welcome-banner />
 
-        @can('guru')
+        @role('guru')
             <div class="grid grid-cols-12 gap-4">
                 <div class="bg-white rounded-md p-4 flex gap-4 items-center col-span-full md:col-span-6 lg:col-span-4">
                     <div class="rounded-full bg-indigo-100 p-6 shadow">
@@ -90,8 +90,7 @@
                     </div>
                 </div>
             </div>
-        @endcan
-        @can('siswa')
+        @else
             <div class="bg-white rounded-md p-4 flex gap-4 items-center">
                 <div class="rounded-full bg-indigo-100 p-6 shadow">
                     <svg class="w-10 h-10 shrink-0" viewBox="0 0 24 24">
@@ -106,7 +105,7 @@
                     <span>Hasil Diagnosa</span>
                 </div>
             </div>
-        @endcan
+        @endrole
         <div class="bg-white p-4 rounded-md shadow">
             <h1 class="font-semibold mb-4 text-2xl">Pertanyaan yang sering diajukan - FAQ</h1>
             <div class="bg-white w-full border border-gray-200 rounded-md" x-data="{ selected: 1 }">

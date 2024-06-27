@@ -5,14 +5,32 @@
         @csrf
         <div class="space-y-4">
             <div>
-                <x-label for="name">{{ __('Full Name') }} <span class="text-rose-500">*</span></x-label>
+                <x-label for="name">{{ __('Nama Lengkap') }} <span class="text-rose-500">*</span></x-label>
                 <x-input id="name" type="text" name="name" :value="old('name')" required autofocus
                     autocomplete="name" />
             </div>
 
             <div>
-                <x-label for="email">{{ __('Email Address') }} <span class="text-rose-500">*</span></x-label>
+                <x-label for="email">{{ __('Email') }} <span class="text-rose-500">*</span></x-label>
                 <x-input id="email" type="email" name="email" :value="old('email')" required />
+            </div>
+
+            <div>
+                <x-label>{{ __('Pilih Kelas') }} <span class="text-rose-500">*</span></x-label>
+                <div class="mt-2 space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="kelas" value="kelas 1" required>
+                        <span class="ml-2">{{ __('Kelas 1') }}</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="kelas" value="kelas 2" required>
+                        <span class="ml-2">{{ __('Kelas 2') }}</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="kelas" value="kelas 3" required>
+                        <span class="ml-2">{{ __('Kelas 3') }}</span>
+                    </label>
+                </div>
             </div>
 
             <div>
@@ -21,7 +39,7 @@
             </div>
 
             <div>
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
+                <x-label for="password_confirmation" value="{{ __('Konfirmasi Password') }}" />
                 <x-input id="password_confirmation" type="password" name="password_confirmation" required
                     autocomplete="new-password" />
             </div>
@@ -31,29 +49,6 @@
                 {{ __('Sign Up') }}
             </x-button>
         </div>
-        @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-            <div class="mt-6">
-                <label class="flex items-start">
-                    <input type="checkbox" class="form-checkbox mt-1" name="terms" id="terms" />
-                    <span class="text-sm ml-2">
-                        {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                            'terms_of_service' =>
-                                '<a target="_blank" href="' .
-                                route('terms.show') .
-                                '" class="text-sm underline hover:no-underline">' .
-                                __('Terms of Service') .
-                                '</a>',
-                            'privacy_policy' =>
-                                '<a target="_blank" href="' .
-                                route('policy.show') .
-                                '" class="text-sm underline hover:no-underline">' .
-                                __('Privacy Policy') .
-                                '</a>',
-                        ]) !!}
-                    </span>
-                </label>
-            </div>
-        @endif
     </form>
     <x-validation-errors class="mt-4" />
     <!-- Footer -->

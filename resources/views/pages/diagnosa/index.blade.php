@@ -1,7 +1,7 @@
 <x-app-layout>
     <section class="w-full px-4 py-8 mx-auto sm:px-6 lg:px-8 max-w-9xl">
         <div class="p-4 bg-white rounded-md">
-            @can('guru')
+            @role('guru')
                 <div class="mb-4 max-w-sm">
                     <div class="flex gap-2 items-center">
                         <x-label for="diagnosaSearch">Search: </x-label>
@@ -9,8 +9,7 @@
                             placeholder="Cari berdasarkan nama..." />
                     </div>
                 </div>
-            @endcan
-            @can('siswa')
+            @else
                 <div class="mb-4 max-w-sm">
                     <div class="flex gap-2 items-center">
                         <x-label for="filterDiagnosa">Filter: </x-label>
@@ -29,7 +28,7 @@
 
                     </div>
                 </div>
-            @endcan
+            @endrole
             <div id="diagnosa-table" class="overflow-x-auto">
                 @include('components.diagnosa.table', ['diagnosas' => $diagnosas])
             </div>
