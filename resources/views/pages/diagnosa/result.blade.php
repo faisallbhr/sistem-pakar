@@ -135,7 +135,7 @@
                     </p>
                     <p><span class="text-black font-bold">*Catatan:</span> Silahkan datang ke Guru BK <span
                             class="capitalize">{{ Auth::user()->roles[0]->name }}</span> sebelum tanggal
-                        {{ $deadline }}</p>
+                        {{ $deadline }} saat jam istirahat.</p>
                 @else
                     <p>Jadi dapat disimpulkan bahwa pasien tidak mengalami depresi apapun</p>
                 @endif

@@ -217,7 +217,8 @@
             <tr>
                 <td>Catatan</td>
                 <td style="padding: 0px 8px;">:</td>
-                <td>Silahkan datang ke Guru BK Kelas {{ $kelas }} sebelum tanggal {{ $deadline }}</td>
+                <td>Silahkan datang ke Guru BK Kelas {{ $kelas }} sebelum tanggal {{ $deadline }} saat jam
+                    istirahat.</td>
             </tr>
         </table>
     </div>
