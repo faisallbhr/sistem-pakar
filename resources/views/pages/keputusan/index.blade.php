@@ -3,11 +3,11 @@
 
     <section class="w-full px-4 py-8 mx-auto sm:px-6 lg:px-8 max-w-9xl">
         <div class="p-4 bg-white rounded-md">
-            <div class="mb-4 flex justify-between">
-                <x-primary-button onclick="openKeputusanModal()">
-                    Tambah Data Keputusan
+            <div class="mb-4 flex justify-between gap-4">
+                <x-primary-button onclick="openKeputusanModal()" class="flex-1">
+                    Tambah Keputusan
                 </x-primary-button>
-                <div class="flex gap-2 items-center max-w-sm w-full">
+                <div class="flex gap-2 items-center max-w-sm w-full flex-1">
                     <x-label for="keputusanSearch">Search: </x-label>
                     <x-input type="text" id="keputusanSearch" name="keputusanSearch"
                         placeholder="Cari berdasarkan kode depresi..." />

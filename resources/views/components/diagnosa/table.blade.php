@@ -1,4 +1,4 @@
-<table class="w-full overflow-x-auto border-collapse">
+<table class="w-full border-collapse">
     <thead>
         <tr>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 rounded-l-md whitespace-nowrap text-ellipsis">

@@ -3,11 +3,11 @@
 
     <section class="w-full px-4 py-8 mx-auto sm:px-6 lg:px-8 max-w-9xl">
         <div class="p-4 bg-white rounded-md">
-            <div class="mb-4 flex justify-between">
-                <x-primary-button onclick="openGejalaModal()">
-                    Tambah Data Gejala
+            <div class="mb-4 flex justify-between gap-4">
+                <x-primary-button onclick="openGejalaModal()" class="flex-1">
+                    Tambah Gejala
                 </x-primary-button>
-                <div class="flex gap-2 items-center max-w-sm w-full">
+                <div class="flex gap-2 items-center max-w-sm w-full flex-1">
                     <x-label for="gejalaSearch">Search: </x-label>
                     <x-input type="text" id="gejalaSearch" name="gejalaSearch"
                         placeholder="Cari berdasarkan kode gejala..." />

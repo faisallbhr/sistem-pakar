@@ -62,16 +62,19 @@
                 @endauth
             </nav>
         </header>
-        <main class="grid items-center justify-center h-full grid-cols-1 md:grid-cols-2 min-h-dvh">
-            <div>
-                <h1 class="mb-4 text-5xl font-bold text-center md:text-left">Cek Tingkat <span
+        <main class="flex items-center justify-center h-full flex-col md:flex-row min-h-dvh px-4 space-y-10">
+            <div class="max-w-md">
+                <h1 class="mb-4 text-3xl md:text-5xl font-bold text-center">Cek Tingkat <span
                         class="text-blue-800">Depresimu</span>
                     Sekarang!</h1>
 
-                <span id="typed-1" class="font-bold text-transparent text-blue-800 capitalize text-8xl typed"></span>
+                <div class=" hidden md:block">
+                    <span id="typed-1"
+                        class="font-bold text-transparent text-blue-800 capitalize text-5xl md:text-8xl typed"></span>
+                </div>
             </div>
             <div class="mx-auto">
-                <img src="{{ asset('images/hero.svg') }}" alt="" class="object-cover w-96">
+                <img src="{{ asset('images/hero.svg') }}" alt="" class="object-cover w-60 md:w-96">
             </div>
         </main>
     </div>
