@@ -201,8 +201,8 @@
                                     </a>
                                 </li>
                                 <li class="mb-1 last:mb-0">
-                                    <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate @if (Route::is('diagnosa.result.index') || Route::is('diagnosa.result.user')) {{ '!text-indigo-500' }} @endif"
-                                        href="{{ route('diagnosa.result.index') }}">
+                                    <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate @if (Route::is('diagnosa.history.*') || Route::is('diagnosa.result.*')) {{ '!text-indigo-500' }} @endif"
+                                        @role('guru') href="{{ route('diagnosa.history.index') }}" @else href="{{ route('diagnosa.history.user', ['userId' => Auth::user()->id]) }}" @endrole>
                                         <span
                                             class="text-sm font-medium duration-200 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100">History</span>
                                     </a>

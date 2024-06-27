@@ -14,6 +14,75 @@ class DiagnosaController extends Controller
 {
     public function index()
     {
+        $users = DB::table('users')
+            ->select(
+                'users.id',
+                'users.name',
+                'roles.name as kelas'
+            )
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('roles.name', '!=', 'guru')
+            ->orderBy('roles.name', 'asc')
+            ->paginate(10);
+
+        return view('pages.diagnosa.index', [
+            'users' => $users
+        ]);
+    }
+    public function history($userId)
+    {
+        if (!Auth::user()->hasRole('guru')) {
+            if (Auth::user()->id != $userId) {
+                return redirect()->back();
+            }
+        }
+
+        $history = DB::table('diagnosas')
+            ->select(
+                'diagnosas.id',
+                'diagnosas.persentase',
+                'diagnosas.created_at',
+                'diagnosas.kode_depresi',
+                'users.name',
+                'depresis.deskripsi',
+                'roles.name as kelas'
+            )
+            ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('diagnosas.user_id', $userId)
+            ->orderBy('diagnosas.created_at', 'desc')
+            ->paginate(10);
+
+        return view('pages.diagnosa.history-user', [
+            'history' => $history
+        ]);
+    }
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $users = DB::table('users')
+            ->select(
+                'users.id',
+                'users.name',
+                'roles.name as kelas'
+            )
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('users.name', 'like', "%{$search}%")
+            ->orderBy('roles.name', 'asc')
+            ->paginate(10);
+
+        return view('components.diagnosa.users-table', [
+            'users' => $users
+        ]);
+    }
+    public function filter(Request $request, $userId = null)
+    {
+        $filter = $request->input('filter');
+        $filterDate = Carbon::parse($filter);
         $query = DB::table('diagnosas')
             ->select(
                 'diagnosas.id',
@@ -21,64 +90,23 @@ class DiagnosaController extends Controller
                 'diagnosas.created_at',
                 'diagnosas.kode_depresi',
                 'users.name',
-                'depresis.deskripsi'
+                'depresis.deskripsi',
+                'roles.name as kelas'
             )
             ->join('users', 'diagnosas.user_id', '=', 'users.id')
             ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->whereDate('diagnosas.created_at', $filterDate->toDateString())
             ->orderBy('diagnosas.created_at', 'desc');
 
         if (!Auth::user()->hasRole('guru')) {
-            $query->where('user_id', Auth::user()->id);
+            $query->where('diagnosas.user_id', Auth::user()->id);
+        } else {
+            $query->where('diagnosas.user_id', $userId);
         }
 
         $diagnosas = $query->paginate(10);
-
-        return view('pages.diagnosa.index', [
-            'diagnosas' => $diagnosas
-        ]);
-    }
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
-        $diagnosas = DB::table('diagnosas')
-            ->select(
-                'diagnosas.id',
-                'diagnosas.persentase',
-                'diagnosas.created_at',
-                'diagnosas.kode_depresi',
-                'users.name',
-                'depresis.deskripsi'
-            )
-            ->join('users', 'diagnosas.user_id', '=', 'users.id')
-            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
-            ->where('users.name', 'like', "%{$search}%")
-            ->orderBy('diagnosas.created_at', 'desc')
-            ->paginate(10);
-
-        return view('components.diagnosa.table', [
-            'diagnosas' => $diagnosas
-        ]);
-    }
-    public function filter(Request $request)
-    {
-        $filter = $request->input('filter');
-        $filterDate = Carbon::parse($filter);
-        $diagnosas = DB::table('diagnosas')
-            ->select(
-                'diagnosas.id',
-                'diagnosas.persentase',
-                'diagnosas.created_at',
-                'diagnosas.kode_depresi',
-                'users.name',
-                'depresis.deskripsi'
-            )
-            ->join('users', 'diagnosas.user_id', '=', 'users.id')
-            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
-            ->where('user_id', Auth::user()->id)
-            ->whereDate('diagnosas.created_at', $filterDate->toDateString())
-            ->orderBy('diagnosas.created_at', 'desc')
-            ->paginate(10);
-
         return view('components.diagnosa.table', [
             'diagnosas' => $diagnosas
         ]);
@@ -183,12 +211,12 @@ class DiagnosaController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
     public function result($diagnosaId)
     {
         $diagnosa = DB::table('diagnosas')
             ->select(
                 'diagnosas.*',
+                'users.id as user_id',
                 'users.name',
                 'depresis.deskripsi'
             )
@@ -208,7 +236,6 @@ class DiagnosaController extends Controller
             'deadline' => Carbon::parse($diagnosa->created_at)->addDays(5)->format('d-m-Y')
         ]);
     }
-
     public function download($id)
     {
         $diagnosa = DB::table('diagnosas')->select(
@@ -236,7 +263,6 @@ class DiagnosaController extends Controller
         $pdf = Pdf::loadView('pages.diagnosa.download', $data);
         return $pdf->download($diagnosa->name . ' ' . $diagnosa->created_at . '.pdf');
     }
-
     private function getKelas($role)
     {
         switch ($role) {
@@ -250,7 +276,6 @@ class DiagnosaController extends Controller
                 return 'guru';
         }
     }
-
     private function getEvidenceInfo($evidence)
     {
         $data = json_decode($evidence, true);

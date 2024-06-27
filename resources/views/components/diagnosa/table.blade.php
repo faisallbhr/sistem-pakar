@@ -8,6 +8,8 @@
             @endif
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 Tingkat Depresi</th>
+            <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
+                Kelas</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200  whitespace-nowrap text-ellipsis">Persentase
             </th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200  whitespace-nowrap text-ellipsis">Tanggal
@@ -27,6 +29,7 @@
                 @endif
                 <td class="py-2 text-center border-b">{{ $diagnosa->kode_depresi }} |
                     {{ $diagnosa->deskripsi }}</td>
+                <td class="py-2 text-center border-b capitalize">{{ $diagnosa->kelas }}</td>
                 <td class="py-2 text-center border-b">
                     @if ($diagnosa->persentase == 0)
                         -

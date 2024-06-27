@@ -145,7 +145,7 @@
             @if ($diagnosa->kode_depresi != 'P000')
                 @include('components.artikel.index', ['artikel' => $artikel])
             @endif
-            <a href="{{ route('diagnosa.result.index') }}" class="block">
+            <a href="{{ route('diagnosa.history.user', ['userId' => $diagnosa->user_id]) }}" class="block">
                 <x-primary-button>
                     Kembali
                 </x-primary-button>

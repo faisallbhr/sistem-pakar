@@ -4,9 +4,8 @@
             @role('guru')
                 <div class="mb-4 max-w-sm">
                     <div class="flex gap-2 items-center">
-                        <x-label for="diagnosaSearch">Search: </x-label>
-                        <x-input type="text" id="diagnosaSearch" name="diagnosaSearch"
-                            placeholder="Cari berdasarkan nama..." />
+                        <x-label for="userSearch">Search: </x-label>
+                        <x-input type="text" id="userSearch" name="userSearch" placeholder="Cari berdasarkan nama..." />
                     </div>
                 </div>
             @else
@@ -29,8 +28,8 @@
                     </div>
                 </div>
             @endrole
-            <div id="diagnosa-table" class="overflow-x-auto">
-                @include('components.diagnosa.table', ['diagnosas' => $diagnosas])
+            <div id="users-table" class="overflow-x-auto">
+                @include('components.diagnosa.users-table', ['users' => $users])
             </div>
         </div>
     </section>
@@ -40,15 +39,15 @@
             let typingTimer;
             const doneTypingInterval = 500;
 
-            $('#diagnosaSearch').on('input', function() {
+            $('#userSearch').on('input', function() {
                 clearTimeout(typingTimer);
                 typingTimer = setTimeout(() => {
-                    let keyword = $('#diagnosaSearch').val();
-                    $('#diagnosa-table tbody').hide();
+                    let keyword = $('#userSearch').val();
+                    $('#users-table tbody').hide();
                     $('#loading').show();
-                    $('#pagination__diagnosa').hide();
+                    $('#pagination__users').hide();
 
-
+                    console.log(keyword)
                     $.ajax({
                         url: "{{ route('diagnosa.result.search') }}",
                         type: "GET",
@@ -56,65 +55,19 @@
                             search: keyword
                         },
                         success: function(data) {
-                            $('#diagnosa-table').html(data);
+                            $('#users-table').html(data);
                         },
                         error: function(xhr, status, error) {
                             console.error(error);
                         },
                         complete: function() {
                             $('#loading').hide();
-                            $('#diagnosa-table tbody').show()
-                            $('#pagination__diagnosa').show();
+                            $('#users-table tbody').show()
+                            $('#pagination__users').show();
                         }
                     })
                 }, doneTypingInterval);
             })
-
-            $('#filterDiagnosa').on('input', function() {
-                let keyword = $('#filterDiagnosa').val();
-                $('#diagnosa-table tbody').hide();
-                $('#loading').show();
-                $('#pagination__diagnosa').hide();
-
-                $.ajax({
-                    url: "{{ route('diagnosa.result.filter') }}",
-                    type: "GET",
-                    data: {
-                        filter: keyword
-                    },
-                    success: function(data) {
-                        $('#diagnosa-table').html(data);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    },
-                    complete: function() {
-                        $('#loading').hide();
-                        $('#diagnosa-table tbody').show();
-                        $('#pagination__diagnosa').show();
-                    }
-                })
-            })
         })
     </script>
-
-    {{-- <script>
-        const filterDiagnosa = document.getElementById('filterDiagnosa');
-
-        filterDiagnosa.addEventListener('change', function() {
-            const selectedDate = this.value;
-            const formattedSelectedDate = selectedDate.split('-').reverse().join('/');
-            const rows = document.querySelectorAll('#diagnosa-table table tbody tr');
-
-            rows.forEach(function(row) {
-                let tanggalDiagnosa = row.cells[3].innerText;
-
-                if (tanggalDiagnosa === formattedSelectedDate) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-    </script> --}}
 </x-app-layout>
