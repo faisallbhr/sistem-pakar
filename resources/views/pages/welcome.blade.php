@@ -64,7 +64,7 @@
         </header>
         <main class="flex items-center justify-center h-full flex-col md:flex-row min-h-dvh px-4 space-y-10">
             <div class="max-w-md">
-                <h1 class="mb-4 text-3xl md:text-5xl font-bold text-center">Cek Tingkat <span
+                <h1 class="mb-4 text-3xl md:text-5xl font-bold text-center md:text-left">Cek Tingkat <span
                         class="text-blue-800">Depresimu</span>
                     Sekarang!</h1>
 
