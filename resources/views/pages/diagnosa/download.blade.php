@@ -203,7 +203,7 @@
     <div style="margin: 16px 0px;">
         <table>
             <tr>
-                <td>Hasil Diagnosa</td>
+                <td style="white-space: nowrap">Hasil Diagnosa</td>
                 <td style="padding: 0px 8px;">:</td>
                 @if ($tingkat_depresi == 'Tidak Depresi')
                     <td>Tidak depresi</td>
