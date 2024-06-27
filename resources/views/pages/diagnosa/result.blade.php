@@ -133,6 +133,9 @@
                         <span class="text-black font-bold">{{ $diagnosa->deskripsi }}</span>
                         sebesar {{ $diagnosa->persentase }}%
                     </p>
+                    <p><span class="text-black font-bold">*Catatan:</span> Silahkan datang ke Guru BK <span
+                            class="capitalize">{{ Auth::user()->roles[0]->name }}</span> sebelum tanggal
+                        {{ $deadline }}</p>
                 @else
                     <p>Jadi dapat disimpulkan bahwa pasien tidak mengalami depresi apapun</p>
                 @endif

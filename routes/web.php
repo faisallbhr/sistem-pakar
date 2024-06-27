@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/diagnosa/result', [DiagnosaController::class, 'index'])->name('diagnosa.result.index');
     Route::get('/diagnosa/search', [DiagnosaController::class, 'search'])->name('diagnosa.result.search');
     Route::get('/diagnosa/filter', [DiagnosaController::class, 'filter'])->name('diagnosa.result.filter');
+    Route::get('/diagnosa/download/{id}', [DiagnosaController::class, 'download'])->name('diagnosa.download');
 
     // ADMIN SETTING
     Route::get('/admin', [AdminSettingController::class, 'index'])->name('admin.index');

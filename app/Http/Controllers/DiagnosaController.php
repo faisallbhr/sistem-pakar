@@ -8,6 +8,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DiagnosaController extends Controller
 {
@@ -203,7 +204,80 @@ class DiagnosaController extends Controller
 
         return view('pages.diagnosa.result', [
             'diagnosa' => $diagnosa,
-            'artikel' => $artikel
+            'artikel' => $artikel,
+            'deadline' => Carbon::parse($diagnosa->created_at)->addDays(5)->format('d-m-Y')
         ]);
+    }
+
+    public function download($id)
+    {
+        $diagnosa = DB::table('diagnosas')->select(
+            'diagnosas.id',
+            'diagnosas.evidence',
+            'diagnosas.persentase',
+            'diagnosas.created_at',
+            'users.name',
+            'roles.name as kelas',
+            'depresis.deskripsi as tingkat_depresi'
+        )
+            ->join('users', 'diagnosas.user_id', '=', 'users.id')
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
+            ->where('diagnosas.id', $id)
+            ->first();
+
+        $diagnosa->kelas = $this->getKelas($diagnosa->kelas);
+        $diagnosa->created_at = Carbon::parse($diagnosa->created_at)->format('d-m-Y');
+        $diagnosa->deadline = Carbon::parse($diagnosa->created_at)->addDays(5)->format('d-m-Y');
+        $diagnosa->evidence = $this->getEvidenceInfo($diagnosa->evidence);
+
+        $data = (array) $diagnosa;
+        $pdf = Pdf::loadView('pages.diagnosa.download', $data);
+        return $pdf->download($diagnosa->name . ' ' . $diagnosa->created_at . '.pdf');
+    }
+
+    private function getKelas($role)
+    {
+        switch ($role) {
+            case 'kelas 1':
+                return 1;
+            case 'kelas 2':
+                return 2;
+            case 'kelas 3':
+                return 3;
+            default:
+                return 'guru';
+        }
+    }
+
+    private function getEvidenceInfo($evidence)
+    {
+        $data = json_decode($evidence, true);
+        $keys = array_keys($data);
+
+        $gejalaDescriptions = DB::table('gejalas')
+            ->whereIn('kode', $keys)
+            ->pluck('deskripsi', 'kode');
+
+        $kondisiDescriptions = [];
+
+        foreach ($data as $key => $value) {
+            $deskripsiKondisi = DB::table('kondisis')
+                ->where('nilai', $value)
+                ->value('deskripsi');
+
+            $kondisiDescriptions[$key] = $deskripsiKondisi;
+        }
+
+        $newJson = [];
+        foreach ($data as $key => $value) {
+            $newJson[$key] = [
+                'gejala' => $gejalaDescriptions[$key],
+                'kondisi' => $kondisiDescriptions[$key]
+            ];
+        }
+
+        return $newJson;
     }
 }
