@@ -52,14 +52,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $kelas2 = User::create([
-            'name' => 'Kelas 2',
-            'email' => 'kelas2@gmail.com',
+            'name' => 'John Doe',
+            'email' => 'johndoe@gmail.com',
             'password' => bcrypt('password')
         ]);
 
         $kelas3 = User::create([
-            'name' => 'Kelas 3',
-            'email' => 'kelas3@gmail.com',
+            'name' => 'Samuel Smith',
+            'email' => 'samuelsmith@gmail.com',
             'password' => bcrypt('password')
         ]);
 
