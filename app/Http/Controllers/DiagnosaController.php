@@ -37,7 +37,8 @@ class DiagnosaController extends Controller
             return redirect()->back();
         }
 
-        $history = DB::table('diagnosas')
+        $filter = request()->input('filter');
+        $query = DB::table('diagnosas')
             ->select(
                 'diagnosas.id',
                 'diagnosas.persentase',
@@ -51,14 +52,57 @@ class DiagnosaController extends Controller
             ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-            ->where('diagnosas.user_id', $userId)
-            ->orderBy('diagnosas.created_at', 'desc')
+            ->where('diagnosas.user_id', $userId);
+
+        if ($filter) {
+            $filterDate = Carbon::parse($filter);
+            $query->whereDate('diagnosas.created_at', $filterDate->toDateString());
+        }
+
+        $history = $query->orderBy('diagnosas.created_at', 'desc')
             ->paginate(10);
 
-        return view('pages.diagnosa.history-user', [
-            'history' => $history
-        ]);
+        $dataForChart = [];
+        foreach ($history as $item) {
+            $tanggal = date('d-m-Y', strtotime($item->created_at));
+            switch ($item->deskripsi) {
+                case 'Tidak Depresi':
+                    $kategoriDepresi = 1;
+                    break;
+                case 'Gangguan Mood':
+                    $kategoriDepresi = 2;
+                    break;
+                case 'Depresi Ringan':
+                    $kategoriDepresi = 3;
+                    break;
+                case 'Depresi Sedang':
+                    $kategoriDepresi = 4;
+                    break;
+                case 'Depresi Berat':
+                    $kategoriDepresi = 5;
+                    break;
+                default:
+                    $kategoriDepresi = 0;
+            }
+            $dataForChart[] = [
+                'tanggal' => $tanggal,
+                'kategoriDepresi' => $kategoriDepresi,
+                'persentase' => $item->persentase
+            ];
+        }
+
+        if ($filter) {
+            return view('components.diagnosa.table', [
+                'history' => $history
+            ]);
+        } else {
+            return view('pages.diagnosa.history-user', [
+                'history' => $history,
+                'dataForChart' => $dataForChart,
+            ]);
+        }
     }
+
     public function search(Request $request)
     {
         $search = $request->input('search');
@@ -76,38 +120,6 @@ class DiagnosaController extends Controller
 
         return view('components.diagnosa.users-table', [
             'users' => $users
-        ]);
-    }
-    public function filter(Request $request, $userId = null)
-    {
-        $filter = $request->input('filter');
-        $filterDate = Carbon::parse($filter);
-        $query = DB::table('diagnosas')
-            ->select(
-                'diagnosas.id',
-                'diagnosas.persentase',
-                'diagnosas.created_at',
-                'diagnosas.kode_depresi',
-                'users.name',
-                'depresis.deskripsi',
-                'roles.name as kelas'
-            )
-            ->join('users', 'diagnosas.user_id', '=', 'users.id')
-            ->join('depresis', 'diagnosas.kode_depresi', '=', 'depresis.kode')
-            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-            ->whereDate('diagnosas.created_at', $filterDate->toDateString())
-            ->orderBy('diagnosas.created_at', 'desc');
-
-        if (!Auth::user()->hasRole('guru')) {
-            $query->where('diagnosas.user_id', Auth::user()->id);
-        } else {
-            $query->where('diagnosas.user_id', $userId);
-        }
-
-        $diagnosas = $query->paginate(10);
-        return view('components.diagnosa.table', [
-            'diagnosas' => $diagnosas
         ]);
     }
     public function test()

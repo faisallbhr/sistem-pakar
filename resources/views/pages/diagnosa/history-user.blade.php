@@ -19,8 +19,8 @@
 
                 </div>
             </div>
-            <div id="diagnosa-table" class="overflow-x-auto">
-                @include('components.diagnosa.table', ['diagnosas' => $history])
+            <div id="history-table" class="overflow-x-auto">
+                @include('components.diagnosa.table', ['history' => $history])
             </div>
             @role('guru')
                 <a href="{{ route('diagnosa.history.index') }}" class="flex justify-end">
@@ -29,177 +29,103 @@
             @endrole
         </div>
 
-        <div id="chart" class="mt-10 -ml-2 mr-12"></div>
+        <div id="chart" class="mt-10"></div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    {{-- <script>
+    <script>
         var options = {
             series: [{
-                    name: "Gangguan Mood",
-                    data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10]
-                },
-                {
-                    name: "Depresi Ringan",
-                    data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35]
-                },
-                {
-                    name: 'Depresi Sedang',
-                    data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47]
-                }
-            ],
+                name: 'Tingkat Depresi',
+                data: [
+                    @foreach ($dataForChart as $data)
+                        {
+                            x: '{{ $data['tanggal'] }}',
+                            y: {{ $data['kategoriDepresi'] }},
+                            persentase: {{ $data['persentase'] }}
+                        },
+                    @endforeach
+                ].reverse()
+            }],
             chart: {
+                type: 'bar',
                 height: 350,
-                type: 'line',
-                zoom: {
-                    enabled: false
-                },
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
             },
             dataLabels: {
                 enabled: false
             },
-            stroke: {
-                width: [5, 5, 5],
-                curve: 'straight',
-            },
-            title: {
-                text: 'Statistik Depresi',
-                align: 'left'
-            },
-            legend: {
-                tooltipHoverFormatter: function(val, opts) {
-                    return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
-                        '</strong>'
-                }
-            },
-            markers: {
-                size: 0,
-                hover: {
-                    sizeOffset: 6
-                }
-            },
             xaxis: {
-                categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
-                    '10 Jan', '11 Jan', '12 Jan'
-                ],
+                categories: [
+                    @foreach ($dataForChart as $data)
+                        '{{ $data['tanggal'] }}',
+                    @endforeach
+                ].reverse(),
+                labels: {
+                    rotate: -45
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Tingkat Depresi'
+                },
+                labels: {
+                    formatter: function(val) {
+                        if (val === 1) return 'Tidak Depresi';
+                        else if (val === 2) return 'Gangguan Mood';
+                        else if (val === 3) return 'Depresi Ringan';
+                        else if (val === 4) return 'Depresi Sedang';
+                        else if (val === 5) return 'Depresi Berat';
+                        else return '';
+                    }
+                },
+                min: 0,
+                max: 5,
+                tickAmount: 5,
+            },
+            fill: {
+                opacity: 1
             },
             tooltip: {
-                y: [{
-                        title: {
-                            formatter: function(val) {
-                                return val
-                            }
-                        }
-                    },
-                    {
-                        title: {
-                            formatter: function(val) {
-                                return val
-                            }
-                        }
-                    },
-                    {
-                        title: {
-                            formatter: function(val) {
-                                return val;
-                            }
-                        }
-                    }
-                ]
-            },
-            grid: {
-                borderColor: '#f1f1f1',
+                custom: function({
+                    series,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    var kategoriDepresi = getDepressionCategory(data.y);
+                    var persentase = data.persentase;
+
+                    return '<div class="p-4">' +
+                        '<span><strong>Tanggal:</strong> ' + data.x + '</span><br>' +
+                        '<span><strong>Tingkat Depresi:</strong> ' + kategoriDepresi + '</span><br>' +
+                        '<span><strong>Persentase:</strong> ' + persentase + '%</span>' +
+                        '</div>';
+                }
             }
         };
 
+        function getDepressionCategory(val) {
+            if (val === 1) return 'Tidak Depresi';
+            else if (val === 2) return 'Gangguan Mood';
+            else if (val === 3) return 'Depresi Ringan';
+            else if (val === 4) return 'Depresi Sedang';
+            else if (val === 5) return 'Depresi Berat';
+            else return '';
+        }
+
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
-    </script> --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Data passed from the controller
-            var chartData = @json($chartData);
-
-            var options = {
-                series: [{
-                        name: "Gangguan Mood",
-                        data: chartData.series['Gangguan Mood'] || []
-                    },
-                    {
-                        name: "Depresi Ringan",
-                        data: chartData.series['Depresi Ringan'] || []
-                    },
-                    {
-                        name: 'Depresi Sedang',
-                        data: chartData.series['Depresi Sedang'] || []
-                    }
-                ],
-                chart: {
-                    height: 350,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    width: [5, 5, 5],
-                    curve: 'straight'
-                },
-                title: {
-                    text: 'Statistik Depresi',
-                    align: 'left'
-                },
-                legend: {
-                    tooltipHoverFormatter: function(val, opts) {
-                        return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts
-                            .dataPointIndex
-                        ] + '</strong>'
-                    }
-                },
-                markers: {
-                    size: 0,
-                    hover: {
-                        sizeOffset: 6
-                    }
-                },
-                xaxis: {
-                    categories: chartData.dates || [],
-                },
-                tooltip: {
-                    y: [{
-                            title: {
-                                formatter: function(val) {
-                                    return val;
-                                }
-                            }
-                        },
-                        {
-                            title: {
-                                formatter: function(val) {
-                                    return val;
-                                }
-                            }
-                        },
-                        {
-                            title: {
-                                formatter: function(val) {
-                                    return val;
-                                }
-                            }
-                        }
-                    ]
-                },
-                grid: {
-                    borderColor: '#f1f1f1',
-                }
-            };
-
-            var chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
-        });
     </script>
 
     <script>
@@ -208,25 +134,26 @@
                 let keyword = $('#filterDiagnosa').val();
                 let userId = window.location.pathname.split('/').pop();
 
-                $('#diagnosa-table tbody').hide();
+                $('#history-table tbody').hide();
                 $('#loading').show();
                 $('#pagination__diagnosa').hide();
                 $.ajax({
-                    url: "{{ route('diagnosa.result.filter') }}",
+                    url: "{{ route('diagnosa.history.user', ['userId' => ':userId']) }}".replace(
+                        ':userId', userId),
                     type: "GET",
                     data: {
                         filter: keyword,
                         userId: userId !== "filter" ? userId : null
                     },
                     success: function(data) {
-                        $('#diagnosa-table').html(data);
+                        $('#history-table').html(data);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
                     },
                     complete: function() {
                         $('#loading').hide();
-                        $('#diagnosa-table tbody').show();
+                        $('#history-table tbody').show();
                         $('#pagination__diagnosa').show();
                     }
                 })

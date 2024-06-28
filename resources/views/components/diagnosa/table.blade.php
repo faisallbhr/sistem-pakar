@@ -19,28 +19,28 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($diagnosas as $diagnosa)
+        @foreach ($history as $item)
             <tr class="hover:bg-gray-100">
                 <td class="py-2 text-center border-b">
-                    {{ ($diagnosas->currentPage() - 1) * $diagnosas->perPage() + $loop->iteration }}</td>
+                    {{ ($history->currentPage() - 1) * $history->perPage() + $loop->iteration }}</td>
                 @if (Auth::user()->hasRole('guru'))
                     <td class="py-2 text-center border-b">
-                        {{ $diagnosa->name }}</td>
+                        {{ $item->name }}</td>
                 @endif
-                <td class="py-2 text-center border-b">{{ $diagnosa->kode_depresi }} |
-                    {{ $diagnosa->deskripsi }}</td>
-                <td class="py-2 text-center border-b capitalize">{{ $diagnosa->kelas }}</td>
+                <td class="py-2 text-center border-b">{{ $item->kode_depresi }} |
+                    {{ $item->deskripsi }}</td>
+                <td class="py-2 text-center border-b capitalize">{{ $item->kelas }}</td>
                 <td class="py-2 text-center border-b">
-                    @if ($diagnosa->persentase == 0)
+                    @if ($item->persentase == 0)
                         -
                     @else
-                        {{ $diagnosa->persentase }}%
+                        {{ $item->persentase }}%
                     @endif
                 </td>
-                <td class="py-2 text-center border-b">{{ date('d/m/Y', strtotime($diagnosa->created_at)) }}</td>
+                <td class="py-2 text-center border-b">{{ date('d/m/Y', strtotime($item->created_at)) }}</td>
                 <td class="py-2 text-center border-b">
                     <div class="flex items-center space-x-3.5 justify-center">
-                        <a href="{{ route('diagnosa.download', ['id' => $diagnosa->id]) }}" title="Download"
+                        <a href="{{ route('diagnosa.download', ['id' => $item->id]) }}" title="Download"
                             class="hover:text-green-500">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                 height="18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -52,8 +52,8 @@
                                 </path>
                             </svg>
                         </a>
-                        <a href="{{ route('diagnosa.result.user', ['diagnosaId' => $diagnosa->id]) }}"
-                            title="Lihat detail" class="hover:text-blue-500">
+                        <a href="{{ route('diagnosa.result.user', ['diagnosaId' => $item->id]) }}" title="Lihat detail"
+                            class="hover:text-blue-500">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
                                 height="18" width="18" xmlns="http://www.w3.org/2000/svg">
                                 <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
@@ -77,5 +77,5 @@
 </div>
 
 <div id="pagination__diagnosa" class="my-4">
-    {{ $diagnosas->onEachSide(1)->links() }}
+    {{ $history->onEachSide(1)->links() }}
 </div>

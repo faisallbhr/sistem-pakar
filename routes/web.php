@@ -64,9 +64,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/diagnosa/test', [DiagnosaController::class, 'store'])->name('diagnosa.store');
     Route::get('/diagnosa/history', [DiagnosaController::class, 'index'])->name('diagnosa.history.index');
     Route::get('/diagnosa/result/{diagnosaId}', [DiagnosaController::class, 'result'])->name('diagnosa.result.user');
-    Route::get('/diagnosa/history/{userId}', [DiagnosaController::class, 'history'])->name('diagnosa.history.user');
+    Route::get('/diagnosa/history/{userId?}', [DiagnosaController::class, 'history'])->name('diagnosa.history.user');
     Route::get('/diagnosa/search', [DiagnosaController::class, 'search'])->name('diagnosa.result.search');
-    Route::get('/diagnosa/filter/{userId?}', [DiagnosaController::class, 'filter'])->name('diagnosa.result.filter');
     Route::get('/diagnosa/download/{id}', [DiagnosaController::class, 'download'])->name('diagnosa.download');
 
     // ADMIN SETTING
