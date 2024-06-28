@@ -28,15 +28,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $kelas1Role = Role::create([
-            'name' => 'kelas 1'
+            'name' => 'kelas 7'
         ]);
 
         $kelas2Role = Role::create([
-            'name' => 'kelas 2'
+            'name' => 'kelas 8'
         ]);
 
         $kelas3Role = Role::create([
-            'name' => 'kelas 3'
+            'name' => 'kelas 9'
         ]);
 
         $guru = User::create([

@@ -19,16 +19,16 @@
                 <x-label>{{ __('Pilih Kelas') }} <span class="text-rose-500">*</span></x-label>
                 <div class="mt-2 space-y-2">
                     <label class="flex items-center">
-                        <input type="radio" name="kelas" value="kelas 1" required>
-                        <span class="ml-2">{{ __('Kelas 1') }}</span>
+                        <input type="radio" name="kelas" value="kelas 7" required>
+                        <span class="ml-2">{{ __('Kelas 7') }}</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="kelas" value="kelas 2" required>
-                        <span class="ml-2">{{ __('Kelas 2') }}</span>
+                        <input type="radio" name="kelas" value="kelas 8" required>
+                        <span class="ml-2">{{ __('Kelas 8') }}</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="kelas" value="kelas 3" required>
-                        <span class="ml-2">{{ __('Kelas 3') }}</span>
+                        <input type="radio" name="kelas" value="kelas 9" required>
+                        <span class="ml-2">{{ __('Kelas 9') }}</span>
                     </label>
                 </div>
             </div>

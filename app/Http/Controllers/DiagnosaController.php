@@ -273,12 +273,12 @@ class DiagnosaController extends Controller
     private function getKelas($role)
     {
         switch ($role) {
-            case 'kelas 1':
-                return 1;
-            case 'kelas 2':
-                return 2;
-            case 'kelas 3':
-                return 3;
+            case 'kelas 7':
+                return 7;
+            case 'kelas 8':
+                return 8;
+            case 'kelas 9':
+                return 9;
             default:
                 return 'guru';
         }
