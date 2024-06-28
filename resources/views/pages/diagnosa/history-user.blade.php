@@ -1,5 +1,8 @@
 <x-app-layout>
     <section class="w-full px-4 py-8 mx-auto sm:px-6 lg:px-8 max-w-9xl">
+        @role('guru')
+            <div id="chart"></div>
+        @endrole
         <div class="p-4 bg-white rounded-md">
             <div class="mb-4 max-w-sm">
                 <div class="flex gap-2 items-center">
@@ -28,8 +31,6 @@
                 </a>
             @endrole
         </div>
-
-        <div id="chart" class="mt-10"></div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

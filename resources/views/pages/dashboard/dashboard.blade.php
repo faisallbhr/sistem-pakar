@@ -105,6 +105,7 @@
                     <span>Hasil Diagnosa</span>
                 </div>
             </div>
+            <div id="dashboardChart"></div>
         @endrole
         <div class="bg-white p-4 rounded-md shadow">
             <h1 class="font-semibold mb-4 text-2xl">Pertanyaan yang sering diajukan - FAQ</h1>
@@ -197,4 +198,100 @@
 
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        var options = {
+            series: [{
+                name: 'Tingkat Depresi',
+                data: [
+                    @foreach ($dataForChart as $data)
+                        {
+                            x: '{{ $data['tanggal'] }}',
+                            y: {{ $data['kategoriDepresi'] }},
+                            persentase: {{ $data['persentase'] }}
+                        },
+                    @endforeach
+                ]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: [
+                    @foreach ($dataForChart as $data)
+                        '{{ $data['tanggal'] }}',
+                    @endforeach
+                ],
+                labels: {
+                    rotate: -45
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Tingkat Depresi'
+                },
+                labels: {
+                    formatter: function(val) {
+                        if (val === 1) return 'Tidak Depresi';
+                        else if (val === 2) return 'Gangguan Mood';
+                        else if (val === 3) return 'Depresi Ringan';
+                        else if (val === 4) return 'Depresi Sedang';
+                        else if (val === 5) return 'Depresi Berat';
+                        else return '';
+                    }
+                },
+                min: 0,
+                max: 5,
+                tickAmount: 5,
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                custom: function({
+                    series,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    var kategoriDepresi = getDepressionCategory(data.y);
+                    var persentase = data.persentase;
+
+                    return '<div class="p-4">' +
+                        '<span><strong>Tanggal:</strong> ' + data.x + '</span><br>' +
+                        '<span><strong>Tingkat Depresi:</strong> ' + kategoriDepresi + '</span><br>' +
+                        '<span><strong>Persentase:</strong> ' + persentase + '%</span>' +
+                        '</div>';
+                }
+            }
+        };
+
+        function getDepressionCategory(val) {
+            if (val === 1) return 'Tidak Depresi';
+            else if (val === 2) return 'Gangguan Mood';
+            else if (val === 3) return 'Depresi Ringan';
+            else if (val === 4) return 'Depresi Sedang';
+            else if (val === 5) return 'Depresi Berat';
+            else return '';
+        }
+
+        var dashboardChart = new ApexCharts(document.querySelector("#dashboardChart"), options);
+        dashboardChart.render();
+    </script>
 </x-app-layout>
