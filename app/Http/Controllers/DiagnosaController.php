@@ -13,9 +13,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class DiagnosaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = DB::table('users')
+        $search = $request->input('search');
+
+        $usersQuery = DB::table('users')
             ->select(
                 'users.id',
                 'users.name',
@@ -24,8 +26,19 @@ class DiagnosaController extends Controller
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
             ->where('roles.name', '!=', 'guru')
-            ->orderBy('roles.name', 'asc')
-            ->paginate(10);
+            ->orderBy('roles.name', 'asc');
+
+        if ($search) {
+            $usersQuery->where('users.name', 'like', "%{$search}%");
+        }
+
+        $users = $usersQuery->paginate(10);
+
+        if ($request->ajax()) {
+            return view('components.diagnosa.users-table', [
+                'users' => $users
+            ]);
+        }
 
         return view('pages.diagnosa.index', [
             'users' => $users
@@ -101,26 +114,6 @@ class DiagnosaController extends Controller
                 'dataForChart' => $dataForChart,
             ]);
         }
-    }
-
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
-        $users = DB::table('users')
-            ->select(
-                'users.id',
-                'users.name',
-                'roles.name as kelas'
-            )
-            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-            ->where('users.name', 'like', "%{$search}%")
-            ->orderBy('roles.name', 'asc')
-            ->paginate(10);
-
-        return view('components.diagnosa.users-table', [
-            'users' => $users
-        ]);
     }
     public function test()
     {

@@ -49,7 +49,7 @@
 
                     console.log(keyword)
                     $.ajax({
-                        url: "{{ route('diagnosa.result.search') }}",
+                        url: "{{ route('diagnosa.history.index') }}",
                         type: "GET",
                         data: {
                             search: keyword
