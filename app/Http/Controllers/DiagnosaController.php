@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -105,9 +104,13 @@ class DiagnosaController extends Controller
         }
 
         if ($filter) {
-            return view('components.diagnosa.table', [
-                'history' => $history
-            ]);
+            if (request()->ajax()) {
+                return response()->json([
+                    'html' => view('components.diagnosa.table', ['history' => $history])->render(),
+                    'chartData' => $dataForChart
+                ]);
+            }
+            return view('components.diagnosa.table', ['history' => $history]);
         } else {
             return view('pages.diagnosa.history-user', [
                 'history' => $history,

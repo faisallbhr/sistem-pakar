@@ -34,102 +34,100 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        var options = {
-            series: [{
-                name: 'Tingkat Depresi',
-                data: [
-                    @foreach ($dataForChart as $data)
-                        {
-                            x: '{{ $data['tanggal'] }}',
-                            y: {{ $data['kategoriDepresi'] }},
-                            persentase: {{ $data['persentase'] }}
-                        },
-                    @endforeach
-                ].reverse()
-            }],
-            chart: {
-                type: 'bar',
-                height: 350,
-                toolbar: {
-                    show: false
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            xaxis: {
-                categories: [
-                    @foreach ($dataForChart as $data)
-                        '{{ $data['tanggal'] }}',
-                    @endforeach
-                ].reverse(),
-                labels: {
-                    rotate: -45
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'Tingkat Depresi'
-                },
-                labels: {
-                    formatter: function(val) {
-                        if (val === 1) return 'Tidak Depresi';
-                        else if (val === 2) return 'Gangguan Mood';
-                        else if (val === 3) return 'Depresi Ringan';
-                        else if (val === 4) return 'Depresi Sedang';
-                        else if (val === 5) return 'Depresi Berat';
-                        else return '';
+        $(document).ready(function() {
+            var options = {
+                series: [{
+                    name: 'Tingkat Depresi',
+                    data: [
+                        @foreach ($dataForChart as $data)
+                            {
+                                x: '{{ $data['tanggal'] }}',
+                                y: {{ $data['kategoriDepresi'] }},
+                                persentase: {{ $data['persentase'] }}
+                            },
+                        @endforeach
+                    ].reverse()
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: {
+                        show: false
                     }
                 },
-                min: 0,
-                max: 5,
-                tickAmount: 5,
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                custom: function({
-                    series,
-                    seriesIndex,
-                    dataPointIndex,
-                    w
-                }) {
-                    var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-                    var kategoriDepresi = getDepressionCategory(data.y);
-                    var persentase = data.persentase;
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: [
+                        @foreach ($dataForChart as $data)
+                            '{{ $data['tanggal'] }}',
+                        @endforeach
+                    ].reverse(),
+                    labels: {
+                        rotate: -45
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Tingkat Depresi'
+                    },
+                    labels: {
+                        formatter: function(val) {
+                            if (val === 1) return 'Tidak Depresi';
+                            else if (val === 2) return 'Gangguan Mood';
+                            else if (val === 3) return 'Depresi Ringan';
+                            else if (val === 4) return 'Depresi Sedang';
+                            else if (val === 5) return 'Depresi Berat';
+                            else return '';
+                        }
+                    },
+                    min: 0,
+                    max: 5,
+                    tickAmount: 5,
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    custom: function({
+                        series,
+                        seriesIndex,
+                        dataPointIndex,
+                        w
+                    }) {
+                        var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                        var kategoriDepresi = getDepressionCategory(data.y);
+                        var persentase = data.persentase;
 
-                    return '<div class="p-4">' +
-                        '<span><strong>Tanggal:</strong> ' + data.x + '</span><br>' +
-                        '<span><strong>Tingkat Depresi:</strong> ' + kategoriDepresi + '</span><br>' +
-                        '<span><strong>Persentase:</strong> ' + persentase + '%</span>' +
-                        '</div>';
+                        return '<div class="p-4">' +
+                            '<span><strong>Tanggal:</strong> ' + data.x + '</span><br>' +
+                            '<span><strong>Tingkat Depresi:</strong> ' + kategoriDepresi + '</span><br>' +
+                            '<span><strong>Persentase:</strong> ' + persentase + '%</span>' +
+                            '</div>';
+                    }
                 }
+            };
+
+            function getDepressionCategory(val) {
+                if (val === 1) return 'Tidak Depresi';
+                else if (val === 2) return 'Gangguan Mood';
+                else if (val === 3) return 'Depresi Ringan';
+                else if (val === 4) return 'Depresi Sedang';
+                else if (val === 5) return 'Depresi Berat';
+                else return '';
             }
-        };
 
-        function getDepressionCategory(val) {
-            if (val === 1) return 'Tidak Depresi';
-            else if (val === 2) return 'Gangguan Mood';
-            else if (val === 3) return 'Depresi Ringan';
-            else if (val === 4) return 'Depresi Sedang';
-            else if (val === 5) return 'Depresi Berat';
-            else return '';
-        }
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-    </script>
-
-    <script>
-        $(document).ready(function() {
             $('#filterDiagnosa').on('input', function() {
                 let keyword = $('#filterDiagnosa').val();
                 let userId = window.location.pathname.split('/').pop();
@@ -145,8 +143,9 @@
                         filter: keyword,
                         userId: userId !== "filter" ? userId : null
                     },
-                    success: function(data) {
-                        $('#history-table').html(data);
+                    success: function(response) {
+                        $('#history-table').html(response.html);
+                        updateChart(response.chartData);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
@@ -158,6 +157,23 @@
                     }
                 })
             })
+
+            function updateChart(newData) {
+                chart.updateSeries([{
+                    name: 'Tingkat Depresi',
+                    data: newData.map(item => ({
+                        x: item.tanggal,
+                        y: item.kategoriDepresi,
+                        persentase: item.persentase
+                    })).reverse()
+                }]);
+
+                chart.updateOptions({
+                    xaxis: {
+                        categories: newData.map(item => item.tanggal).reverse()
+                    }
+                });
+            }
         })
     </script>
 </x-app-layout>
