@@ -153,7 +153,7 @@
         #diagnosa-table td {
             border: 1px solid black;
             text-align: left;
-            padding: 1px 8px;
+            padding: 2px 8px;
         }
     </style>
 </head>
@@ -185,7 +185,7 @@
                 <tr>
                     <th style="width: 20px; text-align: center;">No</th>
                     <th>Pertanyaan</th>
-                    <th>Jawaban</th>
+                    <th style="text-align: center;">Jawaban</th>
                 </tr>
             </thead>
             <tbody>
@@ -194,7 +194,7 @@
                         <td style="text-align: center;">{{ $loop->iteration }}</td>
                         <td>Apakah anda pernah merasa <span
                                 style="text-transform: lowercase;">{{ $item['gejala'] }}</span>?</td>
-                        <td style="text-align: center;">{{ $item['kondisi'] }}</td>
+                        <td style="text-align: center; white-space: nowrap">{{ $item['kondisi'] }}</td>
                     </tr>
                 @endforeach
             </tbody>
