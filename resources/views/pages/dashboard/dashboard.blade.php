@@ -90,6 +90,7 @@
                     </div>
                 </div>
                 <div class="bg-white rounded-md p-4 col-span-full md:col-span-6 lg:col-span-4">
+                    <h1 class="text-xl text-slate-800 font-bold mb-2">Total Diagnosa</h1>
                     <table>
                         @foreach ($totalDiagnosaType as $item)
                             <tr>
@@ -119,6 +120,7 @@
                     </div>
                 </div>
                 <div class="bg-white rounded-md p-4 col-span-full md:col-span-6 lg:col-span-4">
+                    <h1 class="text-xl text-slate-800 font-bold mb-2">Total Diagnosa</h1>
                     <table>
                         @foreach ($totalDiagnosaType as $item)
                             <tr>
