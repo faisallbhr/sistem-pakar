@@ -21,6 +21,17 @@ class DashboardController extends Controller
             ->where('roles.name', 'guru')
             ->count();
 
+        $query = DB::table('depresis')
+            ->leftJoin('diagnosas', 'depresis.kode', '=', 'diagnosas.kode_depresi')
+            ->select('depresis.deskripsi', DB::raw('COALESCE(COUNT(DISTINCT diagnosas.user_id), 0) as total'))
+            ->groupBy('depresis.deskripsi', 'depresis.kode');
+
+        if (!Auth::user()->hasRole('guru')) {
+            $query->where('diagnosas.user_id', Auth::user()->id);
+        }
+
+        $totalDiagnosaType = $query->get();
+
         $diagnosaSiswa = DB::table('diagnosas')
             ->where('user_id', Auth::user()->id)
             ->count();
@@ -67,6 +78,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('pages/dashboard/dashboard', compact('gejala', 'kondisi', 'depresi', 'keputusan', 'diagnosa', 'admin', 'diagnosaSiswa', 'dataForChart'));
+        return view('pages/dashboard/dashboard', compact('gejala', 'kondisi', 'depresi', 'keputusan', 'diagnosa', 'admin', 'diagnosaSiswa', 'totalDiagnosaType', 'dataForChart'));
     }
 }

@@ -89,20 +89,46 @@
                         <span>Admin</span>
                     </div>
                 </div>
+                <div class="bg-white rounded-md p-4 col-span-full md:col-span-6 lg:col-span-4">
+                    <table>
+                        @foreach ($totalDiagnosaType as $item)
+                            <tr>
+                                <td>{{ $item->deskripsi }}</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>{{ $item->total }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                    <small class="block mt-2 font-bold">*Jika hasil diagnosa sama maka yang dihitung satu.</small>
+                </div>
             </div>
         @else
-            <div class="bg-white rounded-md p-4 flex gap-4 items-center">
-                <div class="rounded-full bg-indigo-100 p-6 shadow">
-                    <svg class="w-10 h-10 shrink-0" viewBox="0 0 24 24">
-                        <path class="fill-current text-indigo-500"
-                            d="M20 7a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 0120 7zM4 23a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 014 23z" />
-                        <path class="fill-current text-indigo-300"
-                            d="M17 23a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 010-2 4 4 0 004-4 1 1 0 012 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1zM7 13a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 110-2 4 4 0 004-4 1 1 0 112 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1z" />
-                    </svg>
+            <div class="grid grid-cols-12 gap-4">
+                <div class="bg-white rounded-md p-4 flex gap-4 items-center col-span-full md:col-span-6 lg:col-span-4">
+                    <div class="rounded-full bg-indigo-100 p-6 shadow">
+                        <svg class="w-10 h-10 shrink-0" viewBox="0 0 24 24">
+                            <path class="fill-current text-indigo-500"
+                                d="M20 7a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 0120 7zM4 23a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 014 23z" />
+                            <path class="fill-current text-indigo-300"
+                                d="M17 23a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 010-2 4 4 0 004-4 1 1 0 012 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1zM7 13a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 110-2 4 4 0 004-4 1 1 0 112 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl text-slate-800 font-bold">{{ $diagnosaSiswa }}</h1>
+                        <span>Hasil Diagnosa</span>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-3xl text-slate-800 font-bold">{{ $diagnosaSiswa }}</h1>
-                    <span>Hasil Diagnosa</span>
+                <div class="bg-white rounded-md p-4 col-span-full md:col-span-6 lg:col-span-4">
+                    <table>
+                        @foreach ($totalDiagnosaType as $item)
+                            <tr>
+                                <td>{{ $item->deskripsi }}</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>{{ $item->total }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                    <small class="block mt-2 font-bold">*Jika hasil diagnosa sama maka yang dihitung satu.</small>
                 </div>
             </div>
             <div id="dashboardChart"></div>
