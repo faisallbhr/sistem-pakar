@@ -121,15 +121,45 @@
                 </div>
                 <div class="bg-white rounded-md p-4 col-span-full md:col-span-6 lg:col-span-4">
                     <h1 class="text-xl text-slate-800 font-bold mb-2">Total Diagnosa</h1>
-                    <table>
-                        @foreach ($totalDiagnosaType as $item)
+                    @if (count($totalDiagnosaType) > 0)
+                        <table>
+                            @foreach ($totalDiagnosaType as $item)
+                                <tr>
+                                    <td>{{ $item->deskripsi }}</td>
+                                    <td style="padding: 0px 8px;">:</td>
+                                    <td>{{ $item->total }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    @else
+                        <table>
                             <tr>
-                                <td>{{ $item->deskripsi }}</td>
+                                <td>Tidak Depresi</td>
                                 <td style="padding: 0px 8px;">:</td>
-                                <td>{{ $item->total }}</td>
+                                <td>0</td>
                             </tr>
-                        @endforeach
-                    </table>
+                            <tr>
+                                <td>Gangguan Mood</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Depresi Ringan</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Depresi Sedang</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Depresi Berat</td>
+                                <td style="padding: 0px 8px;">:</td>
+                                <td>0</td>
+                            </tr>
+                        </table>
+                    @endif
                     <small class="block mt-2 font-bold">*Jika hasil diagnosa sama maka yang dihitung satu.</small>
                 </div>
             </div>
