@@ -10,7 +10,7 @@
                 Tingkat Depresi</th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200 whitespace-nowrap text-ellipsis">
                 Kelas</th>
-            <th class="px-2 py-2 overflow-hidden bg-gray-200  whitespace-nowrap text-ellipsis">Persentase
+            <th class="px-2 py-2 overflow-hidden bg-gray-200  whitespace-nowrap text-ellipsis">Tingkat Kepercayaan
             </th>
             <th class="px-2 py-2 overflow-hidden bg-gray-200  whitespace-nowrap text-ellipsis">Tanggal
             </th>
@@ -31,11 +31,7 @@
                     {{ $item->deskripsi }}</td>
                 <td class="py-2 text-center border-b capitalize">{{ $item->kelas }}</td>
                 <td class="py-2 text-center border-b">
-                    @if ($item->persentase == 0)
-                        -
-                    @else
-                        {{ $item->persentase }}%
-                    @endif
+                    {{ $item->persentase }}%
                 </td>
                 <td class="py-2 text-center border-b">{{ date('d/m/Y', strtotime($item->created_at)) }}</td>
                 <td class="py-2 text-center border-b">

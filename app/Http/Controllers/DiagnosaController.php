@@ -194,6 +194,7 @@ class DiagnosaController extends Controller
 
             if ($maxValue == 0) {
                 $depresiDiagnosa = DB::table('depresis')->where('kode', 'P000')->pluck('kode')->first();
+                $maxValue = 1;
             } else {
                 $depresiDiagnosa = DB::table('keputusans')->where('kode_rule', $maxRule)->pluck('kode_depresi')->first();
             }

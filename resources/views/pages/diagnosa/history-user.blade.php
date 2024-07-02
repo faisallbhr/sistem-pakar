@@ -111,7 +111,7 @@
                         return '<div class="p-4">' +
                             '<span><strong>Tanggal:</strong> ' + data.x + '</span><br>' +
                             '<span><strong>Tingkat Depresi:</strong> ' + kategoriDepresi + '</span><br>' +
-                            '<span><strong>Persentase:</strong> ' + persentase + '%</span>' +
+                            '<span><strong>Tingkat Kepercayaan:</strong> ' + persentase + '%</span>' +
                             '</div>';
                     }
                 }

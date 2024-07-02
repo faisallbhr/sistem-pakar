@@ -8,7 +8,7 @@
                             Tingkat Depresi
                         </th>
                         <th class="px-2 py-2 overflow-hidden bg-gray-200 rounded-r-md whitespace-nowrap text-ellipsis">
-                            Persentase</th>
+                            Tingkat Kepercayaan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -17,11 +17,7 @@
                             {{ $diagnosa->kode_depresi }} |
                             {{ $diagnosa->deskripsi }}</td>
                         <td class="py-2 text-center border-b border-r-indigo-200">
-                            @if ($diagnosa->persentase == 0)
-                                -
-                            @else
-                                {{ $diagnosa->persentase }}%
-                            @endif
+                            {{ $diagnosa->persentase }}%
                         </td>
                     </tr>
                 </tbody>
